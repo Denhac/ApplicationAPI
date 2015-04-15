@@ -8,7 +8,13 @@ Pre-Reqs
         yum install gnucash
         yum install libdbi-dbd-mysql
     I'm pretty sure that gnucash ships with the python bindings these days but your mileage may vary
-
+    
+    On a Ubuntu distribution, try:
+    
+    sudo apt-get install mysql-server
+    sudo apt-get install gnucash
+    sudo apt-get install python-gnucash
+    sudo apt-get install libdbd-mysql
 
 1. Create a user and test database
 Modify the username, database, and password if you like.
