@@ -7,22 +7,30 @@ Pre-Reqs
         yum install epel-release
         yum install gnucash
         yum install libdbi-dbd-mysql
+        
     I'm pretty sure that gnucash ships with the python bindings these days but your mileage may vary
-
+    
+    On a Ubuntu distribution, try:
+    
+    sudo apt-get install mysql-server
+    sudo apt-get install gnucash
+    sudo apt-get install python-gnucash
+    sudo apt-get install libdbd-mysql
 
 1. Create a user and test database
 Modify the username, database, and password if you like.
 You'll have to update the connection string in scripts to reflect your password at least
+    mysql -u root
     create database gnucash;
     create user 'gnucash'@'localhost' IDENTIFIED BY 'yourPasswordHere';
     grant ALL privileges on gnucash.* to 'gnucash'@'localhost';
 
 2. Restore the test data into the database
 This can be done any time you want to reset.  It will automatically drop existing tables and recreate
-    mysql gnucash -u gnucash -p < devdata.sql
+    mysql gnucash -u gnucash -p < path_to_devdata.sql;
 
 3. Run the test script to verify connection
     edit test-connection.py
-
+    
 The best way to learn about the python bindings are to look at the example scripts at http://svn.gnucash.org/trac/browser/gnucash/trunk/src/optional/python-bindings/example_scripts
   
