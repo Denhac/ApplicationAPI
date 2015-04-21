@@ -1,4 +1,4 @@
-<h3>Pre-Reqs</h3>
+<h3>Prerequisites</h3>
 
 - GnuCash
 - Python
@@ -25,15 +25,19 @@ On a Ubuntu distribution, try:
 
 1. Create a user and test database.
 (Modify the username, database, and password if you like.)
+
         mysql -u root
         create database gnucash;
         create user 'gnucash'@'localhost' IDENTIFIED BY 'yourPasswordHere';
         grant ALL privileges on gnucash.* to 'gnucash'@'localhost';
 You'll have to update the connection string in scripts to reflect your password if you are connecting to the Denhac server.
+
 2. Restore the test data into the database.
 This can be done any time you want to reset.  It will automatically drop existing tables and recreate the test setup.
+
         mysql gnucash -u gnucash -p < path_to_devdata.sql;
 3. Run the test script to verify connection.
+
         edit test-connection.py
     
 <h3>Sources</h3>

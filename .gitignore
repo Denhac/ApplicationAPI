@@ -1,2 +1,3 @@
 # Ignore SQL databases
 *.sql
+*.kate-swp
