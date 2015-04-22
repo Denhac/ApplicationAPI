@@ -16,7 +16,7 @@ try:
     else:
         print "Connection made, but customer not found!"
 
-    mySession.EndSession()
+    mySession.endSession()
 
 except:
     mySession.cancelSession()
