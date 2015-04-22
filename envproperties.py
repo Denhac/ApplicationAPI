@@ -1,0 +1,5 @@
+gnucdbstring	= 'mysql://user:password@127.0.0.1/startdb'
+dbserver 		= '127.0.0.1'
+dbuser 			= 'user'
+dbpassword 		= 'password'
+dbschema		= 'startdb'

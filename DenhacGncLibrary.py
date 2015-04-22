@@ -6,9 +6,13 @@
 # With thanks to http://current.workingdirectory.net/posts/2011/gnucash-python-bindings/
 # and many sample scripts here: http://svn.gnucash.org/trac/browser/gnucash/trunk/src/optional/python-bindings/example_scripts
 
+import MySQLdb
+
+import envproperties
+
 import os
-import warnings
 import sys
+import warnings
 
 from datetime import datetime, date, timedelta
 from decimal import Decimal
@@ -150,3 +154,17 @@ class DenhacGncInvoice:
     gnc_numeric_from_decimal = staticmethod(gnc_numeric_from_decimal)
     invoiceMemberDues = staticmethod(invoiceMemberDues)
 
+class DenhacDb:
+    _connect = None
+
+    def connect():
+        if _connect is None:
+            _connect = MySQLdb.connect(envproperties.dbserver, envproperties.dbuser, envproperties.dbpassword, envproperties.dbschema)
+
+    def executeQueryNoResult(sql):
+        Connect()
+
+        # TODO - INPUT SANITIZING (LIKE NOW)
+        cursor = _connect.cursor()
+        cursor.execute(sql)
+        db.commit()
