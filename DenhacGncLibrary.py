@@ -161,8 +161,12 @@ class DenhacDb:
 
     def executeQueryNoResult(self, sql):
         self.connect()
-
-        # TODO - INPUT SANITIZING (LIKE NOW)
         cursor = self._connect.cursor()
         cursor.execute(sql)
         self._connect.commit()
+
+    def executeQueryGetCursor(self, sql):
+        self.connect()
+        cursor = self._connect.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute(sql)
+        return cursor
