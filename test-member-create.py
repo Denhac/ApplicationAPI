@@ -9,9 +9,9 @@ try:
     member_id = "999"
     member_name = "Script Mackdaddy"
 
-    if DenhacGncCustomer.isExists(mySession.getBook(), member_id):
+    if DenhacGncCustomer.isExists(mySession, member_id):
         print "OMG member already exists as a Customer! Getting Customer..."
-        customer = DenhacGncCustomer.getCustomerById(mySession.getBook(), member_id)
+        customer = DenhacGncCustomer.getCustomerById(mySession, member_id)
         print "Got customer."
     else:
         DenhacGncCustomer.createCustomer(mySession, member_id, member_name)
