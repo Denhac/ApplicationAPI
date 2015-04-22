@@ -1,12 +1,9 @@
 #!/usr/bin/python
 
-from DenhacGncLibrary import DenhacGncSession, DenhacGncInvoice
+from DenhacGncLibrary import DenhacGncSession, DenhacGncInvoice, DenhacDb
 from datetime import datetime, date
 import sys
 import csv
-import MySQLdb
-from urlparse import urlparse
-
 
 if ((len(sys.argv) < 4) or (len(sys.argv) > 5)):
     sys.exit('Usage: multi-month-invoice [member ID] [amount] [num months] [starting month(optional)]')
@@ -27,20 +24,8 @@ startYr = today.year
 
 print "Generating "+str(numMths)+" months of invoices for "+memberID+" beginning in "+str(startMth)+"/"+str(startYr)
 
-dbPath = ''
-with open('creds.config') as f:
-    for curLine in f.readlines():
-        if (curLine[0] != '#'):
-            dbPath = curLine.strip()
-mySession = DenhacGncSession(dbPath)
-# Open a straight db session as well because it's quicker to check for exiting invoices
-server, user, password, db = [""]*4
-parts = urlparse(dbPath)
-server = parts.hostname
-user = parts.username
-password = parts.password
-db = parts.path[1:]
-db = MySQLdb.connect(server, user, password, db)
+mySession = DenhacGncSession()
+myDb = DenhacDb()
 
 curMth = startMth
 curYr = startYr

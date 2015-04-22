@@ -3,15 +3,10 @@
 from DenhacGncLibrary import DenhacGncSession, DenhacGncInvoice
 
 from datetime import datetime, date
-
 import sys
-
 import csv
 
-#path = 'mysql://gnucash:Hj0rgQ@10.0.101.249/gnucash'
-path = 'mysql://gnucash:Hj0rgQ@10.0.101.111/gnucash'
-
-mySession = DenhacGncSession(path)
+mySession = DenhacGncSession()
 
 # Read member_ids and amount from file
 with open ('members.csv', 'rb') as csvfile:

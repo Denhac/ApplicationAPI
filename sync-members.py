@@ -1,18 +1,10 @@
 #!/usr/bin/python
-
-import MySQLdb
+from DenhacGncLibrary import DenhacDb
 import sys
-from urlparse import urlparse
 
-server, user, password, db = [""]*4
-with open('creds.config') as f:
-    for curLine in f.readlines():
-        if (curLine[0] != '#'):
-            parts = urlparse(curLine.strip())
-            server = parts.hostname
-            user = parts.username
-            password = parts.password
-            db = parts.path[1:]
+
+
+
 db = MySQLdb.connect(server, user, password, db)
 # The DictCursor lets us reference results by column name
 cursor = db.cursor(MySQLdb.cursors.DictCursor) 

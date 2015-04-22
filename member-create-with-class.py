@@ -3,9 +3,7 @@
 from DenhacGncLibrary import DenhacGncSession, DenhacGncCustomer
 import sys
 
-#path = './xml/denhac_xml.gnucash'
-path = 'mysql://gnucash:Hj0rgQ@10.0.101.249/gnucash'
-mySession = DenhacGncSession(path)
+mySession = DenhacGncSession()
 
 try:
     member_id = "999"
@@ -24,4 +22,3 @@ try:
 except:
     mySession.cancelSession()
     exit(1)
-
