@@ -3,3 +3,6 @@
 
 # Ignore the environment-specific properties
 envproperties.py
+
+# Ignore compiled python files
+*.pyc
