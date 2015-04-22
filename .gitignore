@@ -2,3 +2,4 @@
 *.sql
 
 # Ignore the environment-specific properties
+envproperties.py
