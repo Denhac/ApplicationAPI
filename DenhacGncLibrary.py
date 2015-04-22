@@ -157,14 +157,14 @@ class DenhacGncInvoice:
 class DenhacDb:
     _connect = None
 
-    def connect():
-        if _connect is None:
-            _connect = MySQLdb.connect(envproperties.dbserver, envproperties.dbuser, envproperties.dbpassword, envproperties.dbschema)
+    def connect(self):
+        if self._connect is None:
+            self._connect = MySQLdb.connect(envproperties.dbserver, envproperties.dbuser, envproperties.dbpassword, envproperties.dbschema)
 
-    def executeQueryNoResult(sql):
-        Connect()
+    def executeQueryNoResult(self, sql):
+        self.connect()
 
         # TODO - INPUT SANITIZING (LIKE NOW)
-        cursor = _connect.cursor()
+        cursor = self._connect.cursor()
         cursor.execute(sql)
-        db.commit()
+        self._connect.commit()
