@@ -2,7 +2,6 @@
 
 # Digimonkey
 # Nov 2014
-
 # With thanks to http://current.workingdirectory.net/posts/2011/gnucash-python-bindings/
 # and many sample scripts here: http://svn.gnucash.org/trac/browser/gnucash/trunk/src/optional/python-bindings/example_scripts
 

@@ -3,13 +3,8 @@
 from DenhacGncLibrary import DenhacGncSession, DenhacGncCustomer
 import sys
 
-#path = './xml/denhac_xml.gnucash'
-path = 'mysql://gnucash:yourPasswordHere@localhost/gnucash'  #develop
-
-#release : 'mysql://gnucash:Hj0rgQ@10.0.101.249/gnucash'
-
 print "Starting to open session"
-mySession = DenhacGncSession(path)
+mySession = DenhacGncSession()
 print "Session open"
 
 try:
@@ -26,4 +21,3 @@ try:
 except:
     mySession.cancelSession()
     exit(1)
-
