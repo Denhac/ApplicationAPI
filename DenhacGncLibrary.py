@@ -21,20 +21,19 @@ from gnucash import Session, GncNumeric
 from gnucash.gnucash_business import Customer, Invoice, Entry, BillTerm
 
 class DenhacGncSession:
-    _path = None
+    _path = envproperties.gnucdbstring
     _session = None
     _root = None
     _commod = None
     _currency = None
 
-    def __init__(self, path):
-        if os.path.exists(path + '.LCK'):
+    def __init__(self):
+        if os.path.exists(self._path + '.LCK'):
             raise AssertionError("""Lock file exists. Is GNUCash running?\n""")
 
-        self._path = path
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            self._session = Session(path, is_new = False)
+            self._session = Session(self._path, is_new = False)
 
         self._root = self.getBook().get_root_account()
         self._commod = self.getBook().get_table()
