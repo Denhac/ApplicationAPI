@@ -5,17 +5,17 @@
 # With thanks to http://current.workingdirectory.net/posts/2011/gnucash-python-bindings/
 # and many sample scripts here: http://svn.gnucash.org/trac/browser/gnucash/trunk/src/optional/python-bindings/example_scripts
 
-import MySQLdb
-
+# File that stores environment-specific configs like URLs, usernames, etc.
 import envproperties
 
+# system imports
+from datetime import datetime, date, timedelta
+from decimal import Decimal
 import os
 import sys
 import warnings
 
-from datetime import datetime, date, timedelta
-from decimal import Decimal
-
+# gnucash imports
 from gnucash import Session, GncNumeric
 from gnucash.gnucash_business import Customer, Invoice, Entry, BillTerm
 
@@ -63,19 +63,22 @@ class DenhacGncSession:
 
 class DenhacGncCustomer:
 
-    def getCustomerById(book, customer_id):
-        return book.CustomerLookupByID(customer_id)
+    def getCustomerById(session, customer_id):
+        assert( isinstance(session, DenhacGncSession) )
+        return session.getBook().CustomerLookupByID(customer_id)
 
     def createCustomer(session, customer_id, customer_name):
         assert( isinstance(session, DenhacGncSession) )
         return Customer(session.getBook(), customer_id, session.getCurrency(), customer_name)
 
-    def isExists(book, customer_id):
-        if DenhacGncCustomer.getCustomerById(book, customer_id) is None:
+    def isExists(session, customer_id):
+        assert( isinstance(session, DenhacGncSession) )
+        if DenhacGncCustomer.getCustomerById(session, customer_id) is None:
             return False
         else:
             return True
 
+    # Python 2.x way of declaring static functions
     getCustomerById = staticmethod(getCustomerById)
     createCustomer = staticmethod(createCustomer)
     isExists = staticmethod(isExists)
@@ -149,24 +152,6 @@ class DenhacGncInvoice:
         invoice.PostToAccount(receivables_account, invoice_date, due_date, "", True, False)
         print "Invoice created successfully."
 
+    # Python 2.x way of declaring static functions
     gnc_numeric_from_decimal = staticmethod(gnc_numeric_from_decimal)
     invoiceMemberDues = staticmethod(invoiceMemberDues)
-
-class DenhacDb:
-    _connect = None
-
-    def connect(self):
-        if self._connect is None:
-            self._connect = MySQLdb.connect(envproperties.dbserver, envproperties.dbuser, envproperties.dbpassword, envproperties.dbschema)
-
-    def executeQueryNoResult(self, sql):
-        self.connect()
-        cursor = self._connect.cursor()
-        cursor.execute(sql)
-        self._connect.commit()
-
-    def executeQueryGetCursor(self, sql):
-        self.connect()
-        cursor = self._connect.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute(sql)
-        return cursor

@@ -1,8 +1,8 @@
 #!/usr/bin/python
 
-from DenhacGncLibrary import DenhacDb
+from DenhacDbLibrary import DenhacDb, DenhacGnucashDb
 
-myDb = DenhacDb()
+myDb = DenhacGnucashDb()
 myDb.executeQueryNoResult("DELETE FROM gnclock")
 
 print "Lock Cleared"
