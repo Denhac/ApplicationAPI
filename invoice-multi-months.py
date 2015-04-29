@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 from DenhacGncLibrary import DenhacGncSession, DenhacGncInvoice
 from datetime import datetime, date
 import sys
