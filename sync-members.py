@@ -22,7 +22,7 @@ for gncRow in custCursor.fetchall():
         continue
 
     sql = "SELECT * FROM dh_members WHERE id=%s"
-    memCursor = myMemberDb.executeQueryGetCursor(sql, [gncRow["id"]])
+    memCursor = myMemberDb.executeQueryGetCursor(sql, params = [gncRow["id"]])
     if (memCursor.rowcount == 0):
         # Create a new member row
         sql = "INSERT INTO dh_members (id, memberType, autoPay) VALUES (%s, %s, %s)"
