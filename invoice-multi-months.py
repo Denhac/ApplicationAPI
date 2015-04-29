@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from DenhacGncLibrary import DenhacGncSession, DenhacGncInvoice, DenhacDb
+from DenhacGncLibrary import DenhacGncSession, DenhacGncInvoice
 from datetime import datetime, date
 import sys
 import csv
@@ -25,7 +25,6 @@ startYr = today.year
 print "Generating "+str(numMths)+" months of invoices for "+memberID+" beginning in "+str(startMth)+"/"+str(startYr)
 
 mySession = DenhacGncSession()
-myDb = DenhacDb()
 
 curMth = startMth
 curYr = startYr
