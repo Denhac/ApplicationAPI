@@ -110,12 +110,12 @@ class DenhacGncInvoice:
     def invoiceMemberDues(mySession, member_id, invoice_amount, invoice_id, invoice_date = None, due_date = None):
         assert( isinstance(mySession, DenhacGncSession) )
 
-        # Default to current date if caller doesn't specify
+        # Default invoice_date to current date if caller doesn't specify
         if invoice_date is None:
             today = datetime.today()
             invoice_date = date(today.year, today.month, today.day)
 
-        # Default to 30 days due date if caller doesn't specify
+        # Default due_date to 30 days if caller doesn't specify
         if due_date is None:
             due_date = invoice_date+timedelta(days=30)
 
@@ -124,13 +124,12 @@ class DenhacGncInvoice:
         if customer is None:
             raise ValueError("No Customer found!")
 
-        # Set invoice date (and due date) to the first of the month
-        # TODO - for some reason Gnucash isn't taking this date; it takes whatever date it's created instead.
         invoice = Invoice(mySession.getBook(), invoice_id, mySession.getCurrency(), customer)
         invoice_value = DenhacGncInvoice.gnc_numeric_from_decimal(Decimal(invoice_amount))
         income_account = mySession.getRoot().lookup_by_name("Income - Member Dues")
         asset_account = mySession.getRoot().lookup_by_name("Assets")
         receivables_account = asset_account.lookup_by_name("Accounts Receivable")
+
         # Python bindings don't allow passthrough call to gncBillTermLookupByName with the right parameters.
         # This site couldn't find a way either https://github.com/cvonkleist/hackerspace-gnucash/blob/master/insert_invoices.py line 123
         # So we'll do the same hacky thing and lookup from an existing invoice
