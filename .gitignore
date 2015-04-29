@@ -5,4 +5,4 @@
 envproperties.py
 
 # Ignore compiled python files
-*.pyc
+*.py[cod]
