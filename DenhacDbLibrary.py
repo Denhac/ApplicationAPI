@@ -21,18 +21,17 @@ class DenhacDb:
     def connect(self):
         pass
 
-    def executeQueryNoResult(self, sql):
+    def executeQueryNoResult(self, sql, params = None):
         self.connect()
         cursor = self._connect.cursor()
-        cursor.execute(sql)
+        cursor.execute(sql, params)
         self._connect.commit()
         cursor.close()
 
-    def executeQueryGetCursor(self, sql):
+    def executeQueryGetCursor(self, sql, params = None):
         self.connect()
         cursor = self._connect.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute(sql)
-        self._lastUsedCursor = cursor
+        cursor.execute(sql, params)
         return cursor
 
     # Best practice to always explicitly close!
