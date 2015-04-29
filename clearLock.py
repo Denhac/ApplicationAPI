@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 from DenhacDbLibrary import DenhacDb, DenhacGnucashDb
 
 myDb = DenhacGnucashDb()

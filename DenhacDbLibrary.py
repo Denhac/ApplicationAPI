@@ -5,6 +5,7 @@
 # Import Python mysql bindings
 import MySQLdb
 
+# File that stores environment-specific configs like URLs, usernames, etc.
 import envproperties
 
 # The Python 2.6-and-later way to define abstract base classes
