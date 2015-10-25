@@ -70,3 +70,36 @@ def login():
 #    flash('You were logged out')
 #    return redirect(url_for('show_entries'))
 #
+
+@app.route('/members', methods=['GET'])
+def readMembers():
+    try:
+        return 'readMembers: invoked';
+        # TODO: connect to db from configuration
+        # TODO: check role/permissions; only staff can see all members
+        # TODO: render a template to display all members
+    except:
+        # TODO: return to login page or ... ?
+        return render_template('login.html', error=error)
+
+@app.route('/members', methods=['POST'])
+def createMember():
+    try:
+        return 'createMember: invoked';
+        # TODO: connect to db from configuration
+        # TODO: check role/permissions
+        # TODO: parse data and create new member record
+    except: 
+        # TODO: return to login page or ... ?
+        return render_template('login.html', error=error)
+
+@app.route('/members/<username>', methods=['GET'])
+def readMember(username):
+    try:
+        return 'readMember: ' + username;
+        # TODO: connect to db from configuration
+        # TODO: check role/permissions
+        # TODO: render a template for member name and balance
+    except:
+        # TODO: return to login page or ... ?
+        return render_template('login.html', error=error)

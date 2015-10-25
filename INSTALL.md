@@ -21,6 +21,8 @@ A ssh config entry for `Hostname dev-app.denhac.org` `Host 10.0.101.248` is assu
     $ ./data/import.sh
 
 
-# Framwork Setup
+# Bootstrap Application (osx/*nix)
 
+	$ pip install --upgrade pip
     $ pip install Flask
+	$ pip install python-ldap
