@@ -1,9 +1,13 @@
+#!/usr/bin/python
+# Digimonkey
+# Sep 2015
+
 import envproperties
 import ldap
 
 class DenhacLdapLibrary:
 	_ldap       = None
-	_base       = "ou=Muggles,ou=Humans,ou=Denhac,dc=denhac,dc=local"
+	_base       = envproperties.ldap_base
 	_criteria   = "(objectClass=user)"
 	_attributes = ['displayName']
 

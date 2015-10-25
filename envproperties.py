@@ -12,3 +12,7 @@ member_db_server 	= '127.0.0.1'
 member_db_user 		= 'user'
 member_db_password 	= 'password'
 member_db_schema	= 'memberdb'
+
+# LDAP-related environment properties
+ldap_server         = 'ldap://127.0.0.1'
+ldap_base           = 'dc=denhac,dc=local'
