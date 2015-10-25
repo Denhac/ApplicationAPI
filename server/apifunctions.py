@@ -6,31 +6,55 @@ import envproperties
 from flask import Flask, request, session, flash, abort
 from DenhacLdapLibrary import DenhacLdapLibrary
 
-
 ###### This is only invoked when run from the command-line from testing:
 app = Flask(__name__)
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=8080, debug=True)
 ######
 ###### Used to encrypt the session cookies
-app.secret_key = envproperties.secret_key
+#app.secret_key = envproperties.secret_key
+app.secret_key = "ALL THE BLAH"
 ######
+
+
+
+
+
+## Global function to check if a user is logged in, and redirect him/her to /login if not
+### TODO - UNCOMMENT AND TEST
+#@app.before_request
+#def before_request():
+#	if 'logged_in' not in session and request.endpoint != 'login':
+#		return redirect(url_for('login'))
+
+
+
+# Testing global error handler for now
+@app.errorhandler(Exception)
+def exception_handler(error):
+	return "ERROR: " + repr(error)
+
+
+
+
+
 
 
 @app.route("/hello")
 def hello():
     return "Goodbye, cruel world."
 
-
-@app.route("/abort")
-def abort():
-	abort(401)
-
-@app.route("/flash")
-def flash():
-	flash("I am the Flash!")
-
-
+#@app.route("/abort")
+#def abort():
+#	try:
+#		abort(401)
+#	except:
+#		app.logger.error('WTF we errored here.')
+#
+#@app.route("/flash")
+#def flash():
+#	flash("I am the Flash!")
+#
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -39,14 +63,18 @@ def login():
 
 	try:
 		if request.method == 'POST':
-			user   = request.form['user']
+			user     = request.form['user']
 			password = request.form['password']
 		elif request.method == 'GET':
-			user   = request.args.get("user")
+			user     = request.args.get("user")
 			password = request.args.get("password")
+
+		if not user or not password:
+			return "User and Password are required!"
 
 	except KeyError:
 		return "User and Password are required!"
+
 
 #	try:
 	myLdap = DenhacLdapLibrary()
@@ -98,3 +126,5 @@ def readMember(username):
     except:
         # TODO: return to login page or ... ?
         return render_template('login.html', error=error)
+
+
