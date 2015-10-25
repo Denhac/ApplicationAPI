@@ -17,3 +17,6 @@ member_db_schema	= 'memberdb'
 ldap_server         = 'ldap://127.0.0.1'
 ldap_base           = 'dc=denhac,dc=local'
 ldap_prefix         = 'DENHAC\\'
+
+# Session-management variables
+session_key         = 'sessionkey'

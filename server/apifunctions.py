@@ -2,13 +2,18 @@ import sys
 sys.path.insert(0, '/var/www/denhacpkg')
 sys.path.insert(0, '/var/www/server')
 
+import envproperties
 from flask import Flask, request, session, flash, abort
 from DenhacLdapLibrary import DenhacLdapLibrary
+
 
 ###### This is only invoked when run from the command-line from testing:
 app = Flask(__name__)
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=8080, debug=True)
+######
+###### Used to encrypt the session cookies
+app.secret_key = envproperties.secret_key
 ######
 
 
@@ -39,29 +44,19 @@ def login():
 		elif request.method == 'GET':
 			user   = request.args.get("user")
 			password = request.args.get("password")
-#
-#		if not user:
-#			return "User is required!"
-#		if not pass:
-#			return "Pass is required!"
-#
 
 	except KeyError:
 		return "User and Password are required!"
 
+#	try:
+	myLdap = DenhacLdapLibrary()
+	myLdap.ldapBind(user, password)
 
-	return "I am here."
+	session['logged_in'] = True
+	return "You were logged in!!"
 
-	try:
-		myLdap = DenhacLdapLibrary()
-		myLdap.ldapBind(request.form['user'], request.form['password'])
-
-		session['logged_in'] = True
-		flash('You were logged in')
-#        return redirect(url_for('show_entries'))
-
-	except:
-		return "Some exception somewhere!"
+#	except:
+#		return "You FAIL!"
 
 
 #@app.route('/logout')
