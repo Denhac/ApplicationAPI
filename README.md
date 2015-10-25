@@ -11,7 +11,7 @@ Note, on a Centos server with mysql added during the install process all I had t
     yum install epel-release
     yum install gnucash
     yum install libdbi-dbd-mysql
-        
+
 I'm pretty sure that gnucash ships with the python bindings these days, but your mileage may vary.
     
 On a Ubuntu distribution, try:
@@ -20,7 +20,21 @@ On a Ubuntu distribution, try:
     sudo apt-get install gnucash
     sudo apt-get install python-gnucash
     sudo apt-get install libdbd-mysql
-    
+
+<h4>Flask Setup</h4>
+
+We are using Flask as a framework to speed development and give us access to many pre-built libraries:
+
+    yum install pip
+    pip install flask
+
+The Flask functions are loaded into Apache via the wsgi_mod:
+
+    yum install mod_wsgi
+
+See more info here:  http://flask.pocoo.org/docs/0.10/deploying/mod_wsgi/
+
+
 <h3>Local Testing</h3>
 
 1. Create a user and test database.
