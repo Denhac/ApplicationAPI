@@ -17,7 +17,7 @@ class DenhacLdapLibrary:
 		self._ldap.set_option(ldap.OPT_REFERRALS, 0)
 
 	def ldapBind(self, username, password):
-		if not username.startswith('DENHAC\\'):
-			username = 'DENHAC\\' + username
+		if not username.startswith(envproperties.ldap_prefix):
+			username = envproperties.ldap_prefix + username
 
 		bind    = self._ldap.simple_bind_s(username, password)

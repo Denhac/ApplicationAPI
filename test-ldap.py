@@ -11,6 +11,8 @@ myPass = getpass.getpass(stream=None)
 try:
 	myLdap = DenhacLdapLibrary()
 	myLdap.ldapBind(user, myPass)
+	print "SUCCESS!"
+
 
 except:
 	import traceback
