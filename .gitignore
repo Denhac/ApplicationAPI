@@ -6,3 +6,6 @@ envproperties.py
 
 # Ignore compiled python files
 *.py[cod]
+
+# environment artifacts
+*.swp
