@@ -20,4 +20,4 @@ class DenhacLdapLibrary:
 		if not username.startswith(envproperties.ldap_prefix):
 			username = envproperties.ldap_prefix + username
 
-		bind    = self._ldap.simple_bind_s(username, password)
+		bind = self._ldap.simple_bind_s(username, password)
