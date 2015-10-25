@@ -54,3 +54,12 @@ This can be done any time you want to reset.  It will automatically drop existin
     
 The best way to learn about the python bindings are to look at the example scripts at http://svn.gnucash.org/trac/browser/gnucash/trunk/src/optional/python-bindings/example_scripts
   
+
+# References
+
+* [flask root documentation](http://flask.pocoo.org/docs/0.10)
+* [deploying flask](http://flask.pocoo.org/docs/0.10/deploying/)
+* [quickstart deployment with flask](http://flask.pocoo.org/docs/0.10/quickstart/#quickstart-deployment)
+* [URL building quickstart](http://flask.pocoo.org/docs/0.10/quickstart/#url-building)
+* [flask mega-tutorial](http://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
+* [example flask application](https://github.com/mitsuhiko/flask/blob/master/examples/flaskr/flaskr.py)
