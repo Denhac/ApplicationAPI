@@ -39,7 +39,7 @@ def exception_handler(error):
 # Hello world tester (You still can't even see this if you aren't logged in though - see @app.before_request)
 @app.route("/hello")
 def hello():
-    return "Goodbye, cruel world."
+	return DenhacJsonLibrary.ObjToJson(dict(msg = "Goodbye, cruel world."))
 
 # Login method - POSTed to here by index.html
 @app.route('/login', methods=['POST'])
