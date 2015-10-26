@@ -5,14 +5,16 @@ sys.path.insert(0, '/var/www/server')
 import envproperties
 from flask import Flask, request, session, flash, abort
 from DenhacLdapLibrary import DenhacLdapLibrary
+from DenhacJsonLibrary import DenhacJsonLibrary
+
+app = Flask(__name__)
 
 ###### This is only invoked when run from the command-line from testing:
-app = Flask(__name__)
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=8080, debug=True)
 ######
 ###### Used to encrypt the session cookies
-#app.secret_key = envproperties.secret_key
+#app.secret_key = envproperties.secret_key	# TODO - why isn't this working?
 app.secret_key = "ALL THE BLAH"
 ######
 
@@ -25,8 +27,13 @@ app.secret_key = "ALL THE BLAH"
 #@app.before_request
 #def before_request():
 #	if 'logged_in' not in session and request.endpoint != 'login':
-#		return redirect(url_for('login'))
+#		return redirect(url_for('main'))
 
+
+# Main page - login form to enter user/pw
+@app.route('/')
+def main():
+	return render_template('login.html')
 
 
 # Testing global error handler for now
@@ -56,7 +63,10 @@ def hello():
 #	flash("I am the Flash!")
 #
 
-@app.route('/login', methods=['GET', 'POST'])
+
+
+
+@app.route('/login', methods=['GET', 'POST'])	# TODO - deprecate GET
 def login():
 	user     = None
 	password = None
@@ -70,21 +80,18 @@ def login():
 			password = request.args.get("password")
 
 		if not user or not password:
-			return "User and Password are required!"
+			raise KeyError
 
 	except KeyError:
 		return "User and Password are required!"
+# TODO - test new library
+#		return DenhacJsonLibrary.ReplyWithError("User and Password are required!")
 
-
-#	try:
 	myLdap = DenhacLdapLibrary()
 	myLdap.ldapBind(user, password)
 
 	session['logged_in'] = True
 	return "You were logged in!!"
-
-#	except:
-#		return "You FAIL!"
 
 
 #@app.route('/logout')
