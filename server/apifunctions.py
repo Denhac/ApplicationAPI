@@ -58,11 +58,13 @@ def login():
 	except KeyError:
 		return DenhacJsonLibrary.ReplyWithError("User and Password are required!")
 
-	myLdap = DenhacLdapLibrary()
-	myLdap.ldapBind(user, password)
-
-	session['logged_in'] = True
-	return DenhacJsonLibrary.ObjToJson(dict(login="true"))
+	try:
+		myLdap = DenhacLdapLibrary()
+		myLdap.ldapBind(user, password)
+		session['logged_in'] = True
+		return DenhacJsonLibrary.ObjToJson(dict(login="true"))
+	except:
+		return render_template('login.html', error = "Invalid user name or password.")
 
 # Logout method
 @app.route('/logout')
