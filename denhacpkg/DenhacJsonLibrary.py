@@ -10,13 +10,13 @@ class DenhacJsonLibrary:
 	def __init__(self):
 		pass
 
-	def ObjToJson(self, obj):
+	def ObjToJson(obj):
 		return json.dumps(obj, default=lambda o: o.__dict__)
 
-	def JsonToObj(self, jsonStr):
+	def JsonToObj(jsonStr):
 		return json.loads(jsonStr)
 
-	def ReplyWithError(self, msg):
+	def ReplyWithError(msg):
 		return DenhacJsonLibrary.ObjToJson(dict(errorMsg = msg))
 		# TODO - abort(500) and create a custom error page template, to pass this errorMsg to.
 
