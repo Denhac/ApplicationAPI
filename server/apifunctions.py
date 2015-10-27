@@ -3,14 +3,15 @@ sys.path.insert(0, '/var/www/denhacpkg')
 sys.path.insert(0, '/var/www/server')
 
 import envproperties
-from flask import Flask, request, session, render_template, redirect, url_for, flash#, abort
+import time
+from flask import Flask, request, session, render_template, redirect, url_for
 from DenhacLdapLibrary import DenhacLdapLibrary
 from DenhacJsonLibrary import DenhacJsonLibrary
 
 app = Flask(__name__)
 
 ##########################################
-###### This is only invoked when run from the command-line from testing:
+###### This is only invoked when run from the command-line for testing:
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=8080, debug=True)
 ##########################################
@@ -24,6 +25,9 @@ app.secret_key = envproperties.session_key
 def before_request():
 	if 'logged_in' not in session and request.endpoint != 'login' and request.endpoint != 'main':
 		return render_template('login.html', error = "You must be logged in to continue.")
+
+	# TODO - roles checks go here.
+
 ##########################################
 
 # Main page - login form to enter user/pw
@@ -36,12 +40,12 @@ def main():
 def exception_handler(error):
 	return DenhacJsonLibrary.ReplyWithError("ERROR: " + repr(error))
 
-# Hello world tester (You still can't even see this if you aren't logged in though - see @app.before_request)
+# Hello world tester (You still can't access this if you aren't logged in though - see @app.before_request)
 @app.route("/hello")
 def hello():
 	return DenhacJsonLibrary.ObjToJson(dict(msg = "Goodbye, cruel world."))
 
-# Login method - POSTed to here by index.html
+# Login method - POSTed to here by index.html; could be called from anywhere
 @app.route('/login', methods=['POST'])
 def login():
 	user     = None
@@ -61,16 +65,36 @@ def login():
 	try:
 		myLdap = DenhacLdapLibrary()
 		myLdap.ldapBind(user, password)
-		session['logged_in'] = True
-		return DenhacJsonLibrary.ObjToJson(dict(login="true"))
 	except:
-		return render_template('login.html', error = "Invalid user name or password.")
+		# Anti-bruteforcing; force a wait every few consecutive login failures
+		session.pop('logged_in', None)
+		if 'login_tries' not in session:
+			session['login_tries'] = 1
+		else:
+			session['login_tries'] += 1
+
+		if session['login_tries'] % 3 == 0:
+			# Nope, if you're guessing, I'm throttling you to an avg of <1/sec.
+			time.sleep(5)
+			session.pop('login_tries', None)
+
+		# Ok finally tell the user he/she failed
+		return DenhacJsonLibrary.ReplyWithError("Invalid user name or password.")
+
+	session['logged_in'] = True
+	session['user']      = user
+	session.pop('login_tries', None)
+	return DenhacJsonLibrary.ObjToJson(dict(logged_in = "True"))
+
+	# TODO - get roles from DB, store them here, and then check them in @app.before_request()
+
+
 
 # Logout method
 @app.route('/logout')
 def logout():
 	session.pop('logged_in', None)
-	return render_template('login.html', error = "You were logged out.")
+	return DenhacJsonLibrary.ObjToJson(dict(logged_out = "True"))
 
 
 
