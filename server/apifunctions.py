@@ -119,43 +119,44 @@ def logout():
 	return DenhacJsonLibrary.ObjToJson(dict(logged_out = "True"))
 
 
-
-
-
-
 # Helper fn to maintain same DB session across same Flask session
 #def getMemberDb():
 #	if 'member_db' not in session:
 #		session['member_db'] = DenhacMemberDb()
 #	return session['member_db']
-#  TODO - THIS ISN'T WORKING BECAUSE OF SOME FOOL JSON ERROR
+# TODO - THIS ISN'T WORKING BECAUSE OF SOME FOOL JSON ERROR
+# See here: http://stackoverflow.com/questions/24035878/fixing-the-class-to-enable-object-storing-in-flask-session
+# And here: http://stackoverflow.com/questions/21411497/flask-jsonify-a-list-of-objects
 
 
 
-# Mark's query - phase 1
-@app.route('/pastduemembers')
-def pastduemembers():
+@app.route('/memberpayment', methods=['GET'])
+def memberpaymentreport():
 
-	memberDb = DenhacMemberDb()
+	# TODO - replace this check with proper roles management :)
+	if session['username'] != 'digimonkey' and session['username'] != 'xync' and session['username'] != 'quincy' and session['username'] != 'emptyset':
+		return DenhacJsonLibrary.ReplyWithError("Access denied.")
 
-	sql = """
-		SELECT c.name, c.id, i.id, i.date_posted, s.value_num, s.action
-		FROM invoices i, splits s, customers c
-		WHERE i.post_lot = s.lot_guid
-		  AND i.owner_guid = c.guid
-/*		  AND date_posted > %s AND date_posted < %s
-*/
-		  AND date_posted > '2015-07-01'
-		ORDER BY i.id, s.action;
-	"""
 
-	cur = memberDb.executeQueryGetCursor(sql)
+	startDate = None
+	endDate = None
 
-	desc = cur.description
-	rows = [dict(itertools.izip([col[0] for col in desc], row)) 
-		for row in cur.fetchall()]
+	try:
+		if request.method == 'GET':
+			startDate = request.args['startdate']
+			endDate = request.args['enddate']
 
-	return DenhacJsonLibrary.ObjToJson(dict(rows = rows))
+		if not startDate or not endDate:
+			raise KeyError
+
+	except KeyError:
+		return DenhacJsonLibrary.ReplyWithError("startdate and enddate are required!")
+
+	gncDb = DenhacGnucashDb()
+	results = gncDb.memberPaymentReport(startDate, endDate)
+	return DenhacJsonLibrary.ObjToJson(dict(rows = results))
+
+
 
 
 
