@@ -13,10 +13,11 @@ import envproperties
 from abc import ABCMeta, abstractmethod
 
 class DenhacDb:
-    __metaclass__ = ABCMeta
-    _connect = None
+    __metaclass__   = ABCMeta
+    _connect        = None
     _lastUsedCursor = None
 
+    # This method is overrided by the child classes
     @abstractmethod
     def connect(self):
         pass
@@ -30,9 +31,20 @@ class DenhacDb:
 
     def executeQueryGetCursor(self, sql, params = None):
         self.connect()
-        cursor = self._connect.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute(sql, params)
-        return cursor
+        self._lastUsedCursor = self._connect.cursor(MySQLdb.cursors.DictCursor)
+        self._lastUsedCursor.execute(sql, params)
+        return self._lastUsedCursor
+
+#    def executeQueryReturnList(self, sql, params = None)
+#        self.executeQueryGetCursor(sql, params)
+#        return self.fetchAllIntoList()
+#
+#    # Thanks: http://stackoverflow.com/questions/22315919/how-to-get-all-mysql-tuple-result-and-convert-to-json
+#    def fetchAllIntoList():
+#        """Returns all rows from a cursor as a list of dicts"""
+#        desc = self._lastUsedCursor.description
+#        return [dict(itertools.izip([col[0] for col in desc], row)) 
+#            for row in self._lastUsedCursor.fetchall()]
 
     # Best practice to always explicitly close!
     def __del__(self):
