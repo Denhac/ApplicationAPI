@@ -54,6 +54,13 @@ class DenhacMemberDb(DenhacDb):
         if self._connect is None:
             self._connect = MySQLdb.connect(envproperties.member_db_server, envproperties.member_db_user, envproperties.member_db_password, envproperties.member_db_schema)
 
+    def getActiveMembers(self):
+        sql = "SELECT * FROM member WHERE active = 1"
+        return self.executeQueryGetAllRows(sql, None)
+
+    def createInvoice(self, params):
+        self.executeQueryNoResult("INSERT INTO invoice (member_id, invoice_date, amount, notes) VALUES (%s,%s,%s,%s)", params);
+
 class DenhacGnucashDb(DenhacDb):
     def connect(self):
         if self._connect is None:
