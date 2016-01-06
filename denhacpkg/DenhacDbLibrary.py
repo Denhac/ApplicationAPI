@@ -58,6 +58,20 @@ class DenhacMemberDb(DenhacDb):
         sql = "SELECT * FROM member WHERE active = 1"
         return self.executeQueryGetAllRows(sql, None)
 
+# Not tested yet
+#    def getMember(self, id):
+#        sql    = "SELECT * FROM member WHERE id = %s"
+#        params = [id]
+#        return self.executeQueryGetAllRows(sql, params)[0]
+
+    def getMemberByADUsername(self, username):
+        sql    = "SELECT * FROM member WHERE ad_username = %s"
+        params = [username]
+        return self.executeQueryGetAllRows(sql, params)[0]
+
+
+
+
 
 # TODO - DEPRECATE THIS CLASS
 class DenhacGnucashDb(DenhacDb):

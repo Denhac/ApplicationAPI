@@ -24,9 +24,14 @@ CREATE TABLE IF NOT EXISTS member (
 	medicalConditionList	varchar(1024),
 	gnuCashId		varchar(6),
 	paymentAmount	float,
-	active			bit,
-	onAutoPay		bit
+	active			tinyint(1) not null default 1,
+	onAutoPay		tinyint(1) not null default 0,
+	isManager		tinyint(1) not null default 0,
+	isAdmin			tinyint(1) not null default 0,
+	ad_username		varchar(20)
 );
+
+CREATE INDEX member_ad_username ON member(ad_username);
 
 CREATE TABLE IF NOT EXISTS invoice (
 	id				int(11) auto_increment not null primary key,

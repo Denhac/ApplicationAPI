@@ -33,17 +33,28 @@ if app.debug is not True:
 ####################################################################################
 
 
-
 ####################################################################################
 ##########  GLOBAL FUNCTIONS FOR ALL REQUESTS
 ####################################################################################
-## Global function to check if a user is logged in
+## Global function to check if a user is logged in and has permissions
 @app.before_request
 def before_request():
+	admin_services   = ['hello']
+	manager_services = ['memberpaymentreport', 'members']
+
+	# Ensure member is logged in to access any APIs
 	if 'logged_in' not in session and request.endpoint != 'login' and request.endpoint != 'main':
 		return DenhacJsonLibrary.ReplyWithError("You must be logged in.")
 
-	# TODO - roles checks go here.
+	# Ensure that admin services have admin privileges
+	if request.endpoint in admin_services and not session['isAdmin']:
+		return DenhacJsonLibrary.ReplyWithError("You do not have permissions for this service.")
+
+	# Ensure that manager services have manager privileges
+	if request.endpoint in manager_services and not session['isManager']:
+		return DenhacJsonLibrary.ReplyWithError("You do not have permissions for this service.")
+####################################################################################
+
 
 # Global error handler for Internal Server Errors
 @app.errorhandler(500)
@@ -63,10 +74,14 @@ def exception_handler(error):
 def main():
 	return render_template('login.html')
 
+####################################################################################
+
 # Hello world tester (You still can't access this if you aren't logged in though - see @app.before_request)
 @app.route("/hello")
 def hello():
 	return DenhacJsonLibrary.ObjToJson(dict(msg = "Goodbye, cruel world."))
+
+####################################################################################
 
 def antiBruteForceLogic():
 	# Force a wait every few consecutive login failures
@@ -109,8 +124,15 @@ def login():
 	session['username']  = username
 	session.pop('login_tries', None)
 
-	# TODO - get roles from DB, store them in session[], and then check them in @app.before_request()
-	return DenhacJsonLibrary.ObjToJson(dict(logged_in = "True"))
+	# Get this member's permissions from DB, store them in session[], and then check them in @app.before_request()
+	memberDb = DenhacMemberDb()
+	member   = memberDb.getMemberByADUsername(username)
+	session['isAdmin']   = member['isAdmin']
+	session['isManager'] = member['isManager']
+
+	return DenhacJsonLibrary.ObjToJson(dict(logged_in = "True", username = username))
+
+####################################################################################
 
 # Logout method
 @app.route('/logout')
@@ -118,6 +140,7 @@ def logout():
 	session.pop('logged_in', None)
 	return DenhacJsonLibrary.ObjToJson(dict(logged_out = "True"))
 
+####################################################################################
 
 # Helper fn to maintain same DB session across same Flask session
 #def getMemberDb():
@@ -128,16 +151,12 @@ def logout():
 # See here: http://stackoverflow.com/questions/24035878/fixing-the-class-to-enable-object-storing-in-flask-session
 # And here: http://stackoverflow.com/questions/21411497/flask-jsonify-a-list-of-objects
 
+####################################################################################
 
 
+# TODO - DEPRECATE THIS SERVICE; WE'RE DONE WITH GNUCASH
 @app.route('/memberpayment', methods=['GET'])
 def memberpaymentreport():
-
-	# TODO - replace this check with proper roles management :)
-	if session['username'] != 'digimonkey' and session['username'] != 'xync' and session['username'] != 'quincy' and session['username'] != 'emptyset':
-		return DenhacJsonLibrary.ReplyWithError("Access denied.")
-
-
 	startDate = None
 	endDate = None
 
@@ -161,7 +180,7 @@ def memberpaymentreport():
 
 
 
-
+####################################################################################
 
 @app.route('/members', methods=['GET'])
 def readMembers():
