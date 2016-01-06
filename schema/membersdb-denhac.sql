@@ -1,6 +1,4 @@
-CREATE DATABASE memberdb;
-CREATE USER 'denhac'@'%' identified by 'password';
-GRANT ALL on memberdb.* to 'denhac'@'%' identified by 'password';
+USE memberdb;
 
 CREATE TABLE IF NOT EXISTS member (
 	id				int(11) auto_increment not null primary key,

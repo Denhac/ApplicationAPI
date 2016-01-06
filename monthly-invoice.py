@@ -15,4 +15,6 @@ for member in memberDb.getActiveMembers():
 
     memberDb.executeQueryNoResult(sql, params)
 
-print 'Done!' #TODO - print this to a log file and cron it once monthly
+print 'Done!'
+
+#TODO - print this to a log file and cron it once monthly

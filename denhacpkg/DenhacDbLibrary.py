@@ -58,9 +58,8 @@ class DenhacMemberDb(DenhacDb):
         sql = "SELECT * FROM member WHERE active = 1"
         return self.executeQueryGetAllRows(sql, None)
 
-    def createInvoice(self, params):
-        self.executeQueryNoResult("INSERT INTO invoice (member_id, invoice_date, amount, notes) VALUES (%s,%s,%s,%s)", params);
 
+# TODO - DEPRECATE THIS CLASS
 class DenhacGnucashDb(DenhacDb):
     def connect(self):
         if self._connect is None:
