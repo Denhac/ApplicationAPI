@@ -63,3 +63,18 @@ The best way to learn about the python bindings are to look at the example scrip
 * [URL building quickstart](http://flask.pocoo.org/docs/0.10/quickstart/#url-building)
 * [flask mega-tutorial](http://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
 * [example flask application](https://github.com/mitsuhiko/flask/blob/master/examples/flaskr/flaskr.py)
+
+
+# 1/26/16: Additional Steps found missed when moving from Dev->Prod
+yum install MySQL-python dos2unix
+adduser apiuser
+# Go edit /etc/passwd to make apiuser nologin
+setsebool -P httpd_can_network_connect on
+setenforce 0
+vi /etc/selinux/config
+#Change  SELINUX=permissive
+yum install python-ldap
+mkdir /var/www/log
+chmod 777 /var/www/log
+touch /var/www/log/apifunctions.log
+chmod 666 /var/www/log/apifunctions.log
