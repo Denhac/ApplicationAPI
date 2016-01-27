@@ -6,11 +6,14 @@
 
 <h3>Setup</h3>
 
+Make sure your host is up to date first
+	yum update
+
 Note, on a Centos server with mysql added during the install process all I had to do was:
 
-    yum install epel-release
+    yum install epel-release libdbi-dbd-mysql
+    yum update
     yum install gnucash
-    yum install libdbi-dbd-mysql
 
 I'm pretty sure that gnucash ships with the python bindings these days, but your mileage may vary.
     
