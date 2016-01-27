@@ -40,7 +40,7 @@ if app.debug is not True:
 @app.before_request
 def before_request():
 	admin_services   = ['hello']
-	manager_services = ['memberpaymentreport', 'members']
+	manager_services = ['memberpaymentreport', 'createMember', 'readMembers', 'readMember', 'createpayment']
 
 	# Ensure member is logged in to access any APIs
 	if 'logged_in' not in session and request.endpoint != 'login' and request.endpoint != 'main':
@@ -104,10 +104,11 @@ def login():
 
 	try:
 		if request.method == 'POST':
+			# Will throw KeyError if vars not present
 			username = request.form['username']
 			password = request.form['password']
 
-		if not username or not password:
+		if not username or not password:			# Detect the condition if a var is there but empty
 			raise KeyError
 
 	except KeyError:
@@ -153,6 +154,48 @@ def logout():
 
 ####################################################################################
 
+@app.route('/createpayment', methods=['GET'])
+def createpayment():
+	try:
+		# Will throw KeyError if vars not present
+		member_id       = request.args['member_id']
+		amount          = request.args['amount']
+		payment_type_id = request.args['payment_type_id']
+		notes           = request.args['notes']
+
+		# Will throw KeyError if present but empty
+		if not member_id or not amount or not payment_type_id or not notes:
+			raise KeyError
+
+	except KeyError:
+		return DenhacJsonLibrary.ReplyWithError("member_id and amount and payment_type_id and notes are required!")
+
+	memberDb = DenhacMemberDb()
+	memberDb.createPayment(member_id, amount, payment_type_id, notes)
+	return DenhacJsonLibrary.ObjToJson(dict(created = "True"))
+
+
+
+
+
+@app.route('/createmember')
+def createmember():
+	return render_template('createmember.html')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+####################################################################################
 
 # TODO - DEPRECATE THIS SERVICE; WE'RE DONE WITH GNUCASH
 @app.route('/memberpayment', methods=['GET'])
@@ -174,6 +217,13 @@ def memberpaymentreport():
 	gncDb = DenhacGnucashDb()
 	results = gncDb.memberPaymentReport(startDate, endDate)
 	return DenhacJsonLibrary.ObjToJson(dict(rows = results))
+
+
+
+
+
+
+
 
 
 

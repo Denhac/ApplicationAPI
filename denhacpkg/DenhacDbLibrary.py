@@ -58,16 +58,37 @@ class DenhacMemberDb(DenhacDb):
         sql = "SELECT * FROM member WHERE active = 1"
         return self.executeQueryGetAllRows(sql, None)
 
+    def getMemberByADUsername(self, username):
+        sql    = "SELECT * FROM member WHERE ad_username = %s"
+        params = [username]
+        return self.executeQueryGetAllRows(sql, params)[0]
+
+    def createPayment(self, member_id, amount, payment_type_id, notes):
+        sql = "INSERT INTO payment (member_id, payment_date, amount, payment_type_id, notes) VALUES (%s,NOW(),%s,%s,%s)"
+        params = [member_id, amount, payment_type_id, notes]
+        self.executeQueryNoResult(sql, params)
+
+    def getBalance(self, member_id):
+        sql = """select inv_total.a - pmnt_total.a as balance
+              from
+              (select coalesce(sum(amount), 0.0) a
+              from member m, invoice i
+              where m.id = i.member_id
+              and m.id = %s) inv_total,
+              (select coalesce(sum(amount), 0.0) a
+              from member m, payment p
+              where m.id = p.member_id
+              and m.id = %s) pmnt_total"""
+        params = [member_id, member_id]
+        return self.executeQueryGetAllRows(sql, params)[0]['balance']
+
+
 # Not tested yet
 #    def getMember(self, id):
 #        sql    = "SELECT * FROM member WHERE id = %s"
 #        params = [id]
 #        return self.executeQueryGetAllRows(sql, params)[0]
 
-    def getMemberByADUsername(self, username):
-        sql    = "SELECT * FROM member WHERE ad_username = %s"
-        params = [username]
-        return self.executeQueryGetAllRows(sql, params)[0]
 
 
 

@@ -3,7 +3,6 @@ from DenhacDbLibrary import DenhacMemberDb
 
 from datetime import date
 import calendar
-import sys
 
 memberDb = DenhacMemberDb()
 
