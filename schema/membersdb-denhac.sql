@@ -28,10 +28,13 @@ CREATE TABLE IF NOT EXISTS member (
 	onAutoPay		tinyint(1) not null default 0,
 	isManager		tinyint(1) not null default 0,
 	isAdmin			tinyint(1) not null default 0,
-	ad_username		varchar(20)
+	ad_username		varchar(20),
+	contact_email	varchar(100),
+	paypal_email	varchar(100)
 );
 
-CREATE INDEX member_ad_username ON member(ad_username);
+CREATE INDEX member_ad_username_idx  ON member(ad_username);
+CREATE INDEX member_paypal_email_idx ON member(paypal_email);
 
 CREATE TABLE IF NOT EXISTS invoice (
 	id				int(11) auto_increment not null primary key,
@@ -67,4 +70,5 @@ INSERT INTO payment_type
 	SELECT 2,'Check' UNION ALL
 	SELECT 3,'PayPal' UNION ALL
 	SELECT 4,'Credit Card' UNION ALL
-	SELECT 5,'Bitcoin';
+	SELECT 5,'Bitcoin' UNION ALL
+	SELECT 6,'Money Order';

@@ -63,6 +63,11 @@ class DenhacMemberDb(DenhacDb):
         params = [username]
         return self.executeQueryGetAllRows(sql, params)[0]
 
+    def getMemberByPaypalEmail(self, paypal_email):
+        sql    = "SELECT * FROM member WHERE paypal_email = %s"
+        params = [paypal_email]
+        return self.executeQueryGetAllRows(sql, params)[0]
+
     def createPayment(self, member_id, amount, payment_type_id, notes):
         sql = "INSERT INTO payment (member_id, payment_date, amount, payment_type_id, notes) VALUES (%s,NOW(),%s,%s,%s)"
         params = [member_id, amount, payment_type_id, notes]
