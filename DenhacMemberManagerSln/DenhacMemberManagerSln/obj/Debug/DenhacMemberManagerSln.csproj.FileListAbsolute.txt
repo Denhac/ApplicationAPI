@@ -1,0 +1,6 @@
+c:\users\blueblood\documents\visual studio 2015\Projects\DenhacMemberManagerSln\DenhacMemberManagerSln\bin\Debug\DenhacMemberManagerSln.exe.config
+c:\users\blueblood\documents\visual studio 2015\Projects\DenhacMemberManagerSln\DenhacMemberManagerSln\bin\Debug\DenhacMemberManager.exe.config
+c:\users\blueblood\documents\visual studio 2015\Projects\DenhacMemberManagerSln\DenhacMemberManagerSln\obj\Debug\DenhacMemberManagerSln.csprojResolveAssemblyReference.cache
+c:\users\blueblood\documents\visual studio 2015\Projects\DenhacMemberManagerSln\DenhacMemberManagerSln\obj\Debug\DenhacMemberManagerSln.MainMenu.resources
+c:\users\blueblood\documents\visual studio 2015\Projects\DenhacMemberManagerSln\DenhacMemberManagerSln\obj\Debug\DenhacMemberManager.Properties.Resources.resources
+c:\users\blueblood\documents\visual studio 2015\Projects\DenhacMemberManagerSln\DenhacMemberManagerSln\obj\Debug\DenhacMemberManagerSln.csproj.GenerateResource.Cache

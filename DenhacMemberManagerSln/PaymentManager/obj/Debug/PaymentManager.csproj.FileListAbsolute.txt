@@ -1,0 +1,15 @@
+c:\users\blueblood\documents\visual studio 2015\Projects\DenhacMemberManagerSln\PaymentManager\bin\Debug\PaymentManager.exe.config
+c:\users\blueblood\documents\visual studio 2015\Projects\DenhacMemberManagerSln\PaymentManager\bin\Debug\PaymentManager.exe
+c:\users\blueblood\documents\visual studio 2015\Projects\DenhacMemberManagerSln\PaymentManager\bin\Debug\PaymentManager.pdb
+c:\users\blueblood\documents\visual studio 2015\Projects\DenhacMemberManagerSln\PaymentManager\obj\Debug\PaymentManager.csprojResolveAssemblyReference.cache
+c:\users\blueblood\documents\visual studio 2015\Projects\DenhacMemberManagerSln\PaymentManager\obj\Debug\PaymentManager.MainMenu.resources
+c:\users\blueblood\documents\visual studio 2015\Projects\DenhacMemberManagerSln\PaymentManager\obj\Debug\PaymentManager.Properties.Resources.resources
+c:\users\blueblood\documents\visual studio 2015\Projects\DenhacMemberManagerSln\PaymentManager\obj\Debug\PaymentManager.csproj.GenerateResource.Cache
+c:\users\blueblood\documents\visual studio 2015\Projects\DenhacMemberManagerSln\PaymentManager\obj\Debug\PaymentManager.exe
+c:\users\blueblood\documents\visual studio 2015\Projects\DenhacMemberManagerSln\PaymentManager\obj\Debug\PaymentManager.pdb
+c:\users\blueblood\documents\visual studio 2015\Projects\DenhacMemberManagerSln\PaymentManager\obj\Debug\PaymentManager.PaymentEntry.resources
+c:\users\blueblood\documents\visual studio 2015\Projects\DenhacMemberManagerSln\PaymentManager\bin\Debug\DenhacAPI.dll
+c:\users\blueblood\documents\visual studio 2015\Projects\DenhacMemberManagerSln\PaymentManager\bin\Debug\DenhacAPI.pdb
+c:\users\blueblood\documents\visual studio 2015\Projects\DenhacMemberManagerSln\PaymentManager\bin\Debug\Newtonsoft.Json.dll
+c:\users\blueblood\documents\visual studio 2015\Projects\DenhacMemberManagerSln\PaymentManager\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Blueblood\Documents\Visual Studio 2015\Projects\DenhacMemberManagerSln\PaymentManager\obj\Debug\PaymentManager.MultiplePayments.resources

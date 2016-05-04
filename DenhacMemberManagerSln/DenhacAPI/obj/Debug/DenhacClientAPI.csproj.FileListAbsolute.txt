@@ -1,0 +1,7 @@
+C:\Users\Blueblood\Documents\Visual Studio 2015\Projects\DenhacMemberManagerSln\DenhacAPI\bin\Debug\DenhacAPI.dll
+C:\Users\Blueblood\Documents\Visual Studio 2015\Projects\DenhacMemberManagerSln\DenhacAPI\bin\Debug\DenhacAPI.pdb
+C:\Users\Blueblood\Documents\Visual Studio 2015\Projects\DenhacMemberManagerSln\DenhacAPI\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Blueblood\Documents\Visual Studio 2015\Projects\DenhacMemberManagerSln\DenhacAPI\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Blueblood\Documents\Visual Studio 2015\Projects\DenhacMemberManagerSln\DenhacAPI\obj\Debug\DenhacClientAPI.csprojResolveAssemblyReference.cache
+C:\Users\Blueblood\Documents\Visual Studio 2015\Projects\DenhacMemberManagerSln\DenhacAPI\obj\Debug\DenhacAPI.dll
+C:\Users\Blueblood\Documents\Visual Studio 2015\Projects\DenhacMemberManagerSln\DenhacAPI\obj\Debug\DenhacAPI.pdb
