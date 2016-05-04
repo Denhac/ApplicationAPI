@@ -219,81 +219,8 @@ def getopenbalances():
 
 
 
-
-
+# TODO - finish the html template JD coded and plug it in here
 #@app.route('/createmember')
 #def createmember():
 #	return render_template('createmember.html')
 
-
-
-
-####################################################################################
-
-# TODO - DEPRECATE THIS SERVICE; WE'RE DONE WITH GNUCASH
-@app.route('/memberpayment', methods=['GET'])
-def memberpaymentreport():
-	startDate = None
-	endDate = None
-
-	try:
-		if request.method == 'GET':
-			startDate = request.args['startdate']
-			endDate = request.args['enddate']
-
-		if not startDate or not endDate:
-			raise KeyError
-
-	except KeyError:
-		return DenhacJsonLibrary.ReplyWithError("startdate and enddate are required!")
-
-	gncDb = DenhacGnucashDb()
-	results = gncDb.memberPaymentReport(startDate, endDate)
-	return DenhacJsonLibrary.ObjToJson(dict(rows = results))
-
-
-
-
-
-
-
-
-
-
-
-
-
-####################################################################################
-
-@app.route('/members', methods=['GET'])
-def readMembers():
-	try:
-		return 'readMembers: invoked';
-		# TODO: connect to db from configuration
-		# TODO: check role/permissions; only staff can see all members
-		# TODO: render a template to display all members
-	except:
-		# TODO: return to login page or ... ?
-		return render_template('login.html', error=error)
-
-@app.route('/members', methods=['POST'])
-def createMember():
-	try:
-		return 'createMember: invoked';
-		# TODO: connect to db from configuration
-		# TODO: check role/permissions
-		# TODO: parse data and create new member record
-	except: 
-		# TODO: return to login page or ... ?
-		return render_template('login.html', error=error)
-
-@app.route('/members/<username>', methods=['GET'])
-def readMember(username):
-	try:
-		return 'readMember: ' + username;
-		# TODO: connect to db from configuration
-		# TODO: check role/permissions
-		# TODO: render a template for member name and balance
-	except:
-		# TODO: return to login page or ... ?
-		return render_template('login.html', error=error)
