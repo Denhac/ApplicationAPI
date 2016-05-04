@@ -87,6 +87,36 @@ class DenhacMemberDb(DenhacDb):
         params = [member_id, member_id]
         return self.executeQueryGetAllRows(sql, params)[0]['balance']
 
+    def searchMemberName(self, search_str):
+        search_str = '%' + search_str + '%'
+        sql = "SELECT id, lastName, firstName, middleInitial, gnuCashId, paymentAmount, active, onAutoPay, contact_email, paypal_email FROM member WHERE firstName like %s or lastName like %s"
+        params = [search_str, search_str]
+        return self.executeQueryGetAllRows(sql, params)
+
+    def getPaymentTypes(self):
+        sql = "SELECT * FROM payment_type"
+        return self.executeQueryGetAllRows(sql, [])
+
+    def getOpenBalances(self):
+        sql = """select inv_total.a - pmt_total.a as balance, m2.*
+                from
+                (select m.id, coalesce(sum(amount), 0.0) a
+                from member m, invoice i
+                where m.id = i.member_id
+                group by m.id) inv_total,
+                (select m.id, coalesce(sum(amount), 0.0) a
+                from member m, payment p
+                where m.id = p.member_id
+                group by m.id) pmt_total,
+                member m2
+                where m2.id = inv_total.id
+                and   m2.id = pmt_total.id
+                and (inv_total.a - pmt_total.a) > 0
+                order by (inv_total.a - pmt_total.a) desc"""
+        return self.executeQueryGetAllRows(sql, [])
+
+
+
 
 # Not tested yet
 #    def getMember(self, id):

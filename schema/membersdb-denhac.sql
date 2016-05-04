@@ -10,7 +10,6 @@ CREATE TABLE IF NOT EXISTS member (
 	streetAddress2	varchar(50),
 	city			varchar(20),
 	zipCode			varchar(9),
-	email			varchar(50),
 	phoneNumber		varchar(50),
 	businessNumber	varchar(50),
 	emerContact1	varchar(50),
@@ -30,7 +29,10 @@ CREATE TABLE IF NOT EXISTS member (
 	isAdmin			tinyint(1) not null default 0,
 	ad_username		varchar(20),
 	contact_email	varchar(100),
-	paypal_email	varchar(100)
+	paypal_email	varchar(100),
+	join_date		date,
+	prox_card_id	varchar(10),
+	driver_license	varchar(20)
 );
 
 CREATE INDEX member_ad_username_idx  ON member(ad_username);
@@ -71,4 +73,5 @@ INSERT INTO payment_type
 	SELECT 3,'PayPal' UNION ALL
 	SELECT 4,'Credit Card' UNION ALL
 	SELECT 5,'Bitcoin' UNION ALL
-	SELECT 6,'Money Order';
+	SELECT 6,'Money Order' UNION ALL
+	SELECT 7,'Adjustment';

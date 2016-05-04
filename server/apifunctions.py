@@ -8,7 +8,7 @@ import itertools
 import logging
 import time
 from logging.handlers import RotatingFileHandler
-from flask import Flask, request, session, render_template, redirect, url_for
+from flask import Flask, request, session, render_template, redirect#, url_for
 from DenhacLdapLibrary import DenhacLdapLibrary
 from DenhacJsonLibrary import DenhacJsonLibrary
 from DenhacDbLibrary import *
@@ -40,7 +40,7 @@ if app.debug is not True:
 @app.before_request
 def before_request():
 	admin_services   = ['hello']
-	manager_services = ['memberpaymentreport', 'createMember', 'readMembers', 'readMember', 'createpayment']
+	manager_services = ['memberpaymentreport', 'createMember', 'readMembers', 'readMember', 'createpayment', 'searchmember', 'getopenbalances']
 
 	# Ensure member is logged in to access any APIs
 	if 'logged_in' not in session and request.endpoint != 'login' and request.endpoint != 'main':
@@ -72,7 +72,20 @@ def exception_handler(error):
 # Main page - login form to enter user/pw
 @app.route('/')
 def main():
-	return render_template('login.html')
+#	return render_template('login.html')
+# TODO - WHY THE @#$%^ DO TEMPLATES WORK ON THE DEV API SERVER AND NOT THE PROD API SERVER???
+	return '''
+	<h2>Login</h2>
+	<form action="login" method="post">
+		<dl>
+			<dt>Username:
+			<dd><input type="text" name="username">
+			<dt>Password:
+			<dd><input type="password" name="password">
+			<dd><input type="submit" value="Login">
+		</dl>
+	</form>
+	'''
 
 ####################################################################################
 
@@ -174,23 +187,43 @@ def createpayment():
 	memberDb.createPayment(member_id, amount, payment_type_id, notes)
 	return DenhacJsonLibrary.ObjToJson(dict(created = "True"))
 
+@app.route('/searchmember', methods=['GET'])
+def searchmember():
+	try:
+		# Will throw KeyError if vars not present
+		search_str = request.args['search_str']
+
+		# Will throw KeyError if present but empty
+		if not search_str:
+			raise KeyError
+
+	except KeyError:
+		return DenhacJsonLibrary.ReplyWithError("search_str is required!")
+
+	memberDb = DenhacMemberDb()
+	resultList = memberDb.searchMemberName(search_str)
+	return DenhacJsonLibrary.ObjToJson(dict(rows = resultList))
+
+@app.route('/getpaymenttypes')
+def getpaymenttypes():
+	memberDb = DenhacMemberDb()
+	resultList = memberDb.getPaymentTypes()
+	return DenhacJsonLibrary.ObjToJson(dict(rows = resultList))
+
+@app.route('/getopenbalances')
+def getopenbalances():
+	memberDb = DenhacMemberDb()
+	resultList = memberDb.getOpenBalances()
+	return DenhacJsonLibrary.ObjToJson(dict(rows = resultList))
 
 
 
 
-@app.route('/createmember')
-def createmember():
-	return render_template('createmember.html')
 
 
-
-
-
-
-
-
-
-
+#@app.route('/createmember')
+#def createmember():
+#	return render_template('createmember.html')
 
 
 

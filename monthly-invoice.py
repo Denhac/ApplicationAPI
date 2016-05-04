@@ -1,8 +1,16 @@
 #!/usr/bin/python
 from DenhacDbLibrary import DenhacMemberDb
 
-from datetime import date
+from datetime import date, datetime
 import calendar
+
+# Set filename to today's date
+fileName = datetime.now().strftime('script_logs/monthly-invoice_%Y_%m_%d.log')
+logFile  = open(fileName, 'w')
+
+def log(msg):
+    logFile.write(msg + '\n')
+    print msg
 
 memberDb = DenhacMemberDb()
 
@@ -13,7 +21,8 @@ for member in memberDb.getActiveMembers():
     params = [member['id'], member['paymentAmount'], notes]
 
     memberDb.executeQueryNoResult(sql, params)
+    log('Created invoice for $' + str(member['paymentAmount']) + ' for member ' + member['lastName'])
 
-print 'Done!'
+log('Done!')
 
-#TODO - print this to a log file and cron it once monthly
+#TODO - cron it once monthly, and email us when it completes (either success or fail)

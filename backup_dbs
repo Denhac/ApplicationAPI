@@ -1,0 +1,6 @@
+#!/usr/bin/bash
+
+NOW=$(date +"%Y-%m-%d")
+LOGFILE="memberdb-gnucash2016-$NOW.sql"
+
+mysqldump --defaults-file=/home/denhac/.my.cnf -u root --add-drop-database --routines --databases memberdb gnucash2016 > db_backups/$LOGFILE
