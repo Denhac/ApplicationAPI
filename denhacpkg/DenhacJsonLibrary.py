@@ -1,7 +1,4 @@
 #!/usr/bin/python
-# Digimonkey
-# Oct 2015
-
 import envproperties
 import datetime, json
 
@@ -12,7 +9,8 @@ class DenhacJsonLibrary:
 
 	def JsonDefaultMappings(value):
 		if isinstance(value, datetime.date):
-			return dict(year=value.year, month=value.month, day=value.day)
+#			return dict(year=value.year, month=value.month, day=value.day)
+			return value.isoformat() if hasattr(value, 'isoformat') else value
 		else:
 			return value.__dict__
 

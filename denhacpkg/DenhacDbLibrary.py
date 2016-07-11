@@ -89,8 +89,8 @@ class DenhacMemberDb(DenhacDb):
 
     def searchMemberName(self, search_str):
         search_str = '%' + search_str + '%'
-        sql = "SELECT id, lastName, firstName, middleInitial, gnuCashId, paymentAmount, active, onAutoPay, contact_email, paypal_email FROM member WHERE firstName like %s or lastName like %s"
-        params = [search_str, search_str]
+        sql = "SELECT id, lastName, firstName, middleInitial, gnuCashId, paymentAmount, active, onAutoPay, contact_email, paypal_email FROM member WHERE firstName like %s or lastName like %s or ad_username like %s"
+        params = [search_str, search_str, search_str]
         return self.executeQueryGetAllRows(sql, params)
 
     def getPaymentTypes(self):
@@ -115,63 +115,105 @@ class DenhacMemberDb(DenhacDb):
                 order by (inv_total.a - pmt_total.a) desc"""
         return self.executeQueryGetAllRows(sql, [])
 
+    def getMember(self, id):
+        sql    = "SELECT * FROM member WHERE id = %s"
+        params = [id]
+        return self.executeQueryGetAllRows(sql, params)
+
+    def getMemberBalance(self, member_id):
+        sql = """select invoice_date as transaction_date, amount, 'Invoice' as type, notes
+                from invoice where member_id = %s
+                union all
+                select payment_date, -amount, pt.description as type, notes
+                from payment p, payment_type pt
+                where member_id = %s
+                and pt.id = p.payment_type_id
+                order by transaction_date desc"""
+        return self.executeQueryGetAllRows(sql, [member_id,member_id])
 
 
 
-# Not tested yet
-#    def getMember(self, id):
-#        sql    = "SELECT * FROM member WHERE id = %s"
-#        params = [id]
-#        return self.executeQueryGetAllRows(sql, params)[0]
+
+
+
+    def createMember(self, fields):
+        # Check for all required fields
+        if  ('lastName' not in fields or
+            'firstName' not in fields or
+            'birthdate' not in fields or
+            'streetAddress1' not in fields or
+            'phoneNumber' not in fields or
+            'paymentAmount' not in fields or
+            'contact_email' not in fields or
+            'paypal_email' not in fields or
+            'join_date' not in fields or
+            'prox_card_id' not in fields):
+
+            raise ValueError("Missing a required field.")
+
+        # Now, fill in any empty non-default values
+        if 'middleInitial' not in fields:
+            fields['middleInitial'] = ''
+        if 'streetAddress2' not in fields:
+            fields['streetAddress2'] = ''
+        if 'city' not in fields:
+            fields['city'] = ''
+        if 'zipCode' not in fields:
+            fields['zipCode'] = ''
+        if 'businessNumber' not in fields:
+            fields['businessNumber'] = ''
+        if 'emerContact1' not in fields:
+            fields['emerContact1'] = ''
+        if 'emerPhone1' not in fields:
+            fields['emerPhone1'] = ''
+        if 'emerAddress1' not in fields:
+            fields['emerAddress1'] = ''
+        if 'emerRelation1' not in fields:
+            fields['emerRelation1'] = ''
+        if 'emerContact2' not in fields:
+            fields['emerContact2'] = ''
+        if 'emerPhone2' not in fields:
+            fields['emerPhone2'] = ''
+        if 'emerAddress2' not in fields:
+            fields['emerAddress2'] = ''
+        if 'emerRelation2' not in fields:
+            fields['emerRelation2'] = ''
+        if 'medicalConditionList' not in fields:
+            fields['medicalConditionList'] = ''
+        if 'gnuCashId' not in fields:
+            fields['gnuCashId'] = ''
+        if 'active' not in fields:
+            fields['active'] = '1'
+        if 'onAutoPay' not in fields:
+            fields['onAutoPay'] = ''
+        if 'isManager' not in fields:
+            fields['isManager'] = ''
+        if 'isAdmin' not in fields:
+            fields['isAdmin'] = ''
+        if 'ad_username' not in fields:
+            fields['ad_username'] = ''
+        if 'prox_card_id' not in fields:
+            fields['prox_card_id'] = ''
+        if 'driver_license' not in fields:
+            fields['driver_license'] = ''
+
+        sql = """INSERT INTO `memberdb`.`member`
+                (`lastName`,`firstName`,`middleInitial`,`birthdate`,`streetAddress1`,`streetAddress2`,`city`,
+                `zipCode`,`phoneNumber`,`businessNumber`,`emerContact1`,`emerPhone1`,`emerAddress1`,`emerRelation1`,
+                `emerContact2`,`emerPhone2`,`emerAddress2`,`emerRelation2`,`medicalConditionList`,`gnuCashId`,`paymentAmount`,`active`,
+                `onAutoPay`,`isManager`,`isAdmin`,`ad_username`,`contact_email`,`paypal_email`,`join_date`,`prox_card_id`,`driver_license`)
+                VALUES
+                (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                """
+        params = [fields['lastName'], fields['firstName'], fields['middleInitial'], fields['birthdate'], fields['streetAddress1'], fields['streetAddress2'], fields['city'],
+                  fields['zipCode'], fields['phoneNumber'], fields['businessNumber'], fields['emerContact1'], fields['emerPhone1'], fields['emerAddress1'], fields['emerRelation1'],
+                  fields['emerContact2'], fields['emerPhone2'], fields['emerAddress2'], fields['emerRelation2'], fields['medicalConditionList'], fields['gnuCashId'], fields['paymentAmount'], fields['active'],
+                  fields['onAutoPay'], fields['isManager'], fields['isAdmin'], fields['ad_username'], fields['contact_email'], fields['paypal_email'], fields['join_date'], fields['prox_card_id'], fields['driver_license']]
+
+        self.executeQueryNoResult(sql, params)
 
 
 
 
 
 
-# TODO - DEPRECATE THIS CLASS
-class DenhacGnucashDb(DenhacDb):
-    def connect(self):
-        if self._connect is None:
-            self._connect = MySQLdb.connect(envproperties.gnc_db_server, envproperties.gnc_db_user, envproperties.gnc_db_password, envproperties.gnc_db_schema)
-
-    # Mark's query - automated!
-    def memberPaymentReport(self, startDate, endDate):
-        sql = """
-            /* For invoices created via API */
-            SELECT c.name as name, c.id as customer_id, i.id as invoice_id,
-                    cast(i.date_posted as char) as date_posted,
-                    s.value_num as value, s.action as action
-            FROM invoices i, splits s, customers c
-            WHERE i.post_lot = s.lot_guid
-              AND i.owner_guid = c.guid
-              AND date_posted > %s AND date_posted < %s
-            UNION
-            /* For invoices created via the UI */
-            SELECT c.name as name, c.id as customer_id, i.id as invoice_id,
-                    cast(i.date_posted as char) as date_posted,
-                    s.value_num as value, s.action as action
-            FROM invoices i, splits s, customers c, jobs j
-            WHERE i.post_lot = s.lot_guid
-            AND i.owner_guid = j.guid
-            AND j.owner_guid = c.guid
-            AND date_posted > %s AND date_posted < %s
-            ORDER BY customer_id, action;
-        """
-
-        params = [startDate, endDate, startDate, endDate]
-        rows = self.executeQueryGetAllRows(sql, params)
-
-        resultHash = defaultdict(dict)  # Hash(with autovivication) to hold each invoice event
-
-        # tabulatePayments
-        for row in rows:
-            entry      = {}
-            memberName = row['name']
-            postdate   = row['date_posted'][:7]   # First 7 characters = "yyyy-mm"
-            action     = row['action']
-            if ((action == "Lot Link") or (action == "Payment")):
-                entry['paid']=1
-            resultHash[memberName][postdate]=entry
-
-        return resultHash

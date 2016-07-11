@@ -1,6 +1,13 @@
 #!/usr/bin/python
-from DenhacDbLibrary import *
+
+# Python includes
 import csv, sys
+
+# Our own includes go here
+# insert() makes our path the first searched entry, as opposed to append()
+sys.path.insert(0, '/var/www/denhacpkg')
+
+from DenhacDbLibrary import *
 
 if len(sys.argv) != 3:
 	msg = """
@@ -71,5 +78,5 @@ print 'Done!'
 print '================================================'
 print '# of Payments: ' + str(numPayments)
 print 'Total Dues Collected: ' + str(totalDues)
-print 'Total Paypal Fees Paid: ' + str(totalFees)
+print 'Total Paypal Fees Paid: ' + str(totalFees) + ' <--- ****** Enter this into WaveApps manually ******'
 print '================================================'

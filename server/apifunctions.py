@@ -40,7 +40,7 @@ if app.debug is not True:
 @app.before_request
 def before_request():
 	admin_services   = ['hello']
-	manager_services = ['memberpaymentreport', 'createMember', 'readMembers', 'readMember', 'createpayment', 'searchmember', 'getopenbalances']
+	manager_services = ['memberpaymentreport', 'createMember', 'readMembers', 'readMember', 'createpayment', 'searchmember', 'getopenbalances', 'getmember', 'getmemberbalance']
 
 	# Ensure member is logged in to access any APIs
 	if 'logged_in' not in session and request.endpoint != 'login' and request.endpoint != 'main':
@@ -216,11 +216,29 @@ def getopenbalances():
 	resultList = memberDb.getOpenBalances()
 	return DenhacJsonLibrary.ObjToJson(dict(rows = resultList))
 
+@app.route('/getmember', defaults={'member_id':'-1'})
+@app.route('/getmember/<member_id>')
+def getmember(member_id):
+	memberDb = DenhacMemberDb()
+	member   = memberDb.getMember(member_id)
+
+	if member:
+		return DenhacJsonLibrary.ObjToJson(dict(row = member[0]))
+
+	return DenhacJsonLibrary.ObjToJson(dict())
+
+@app.route('/getmemberbalance', defaults={'member_id':'-1'})
+@app.route('/getmemberbalance/<member_id>')
+def getmemberbalance(member_id):
+	memberDb = DenhacMemberDb()
+	resultList = memberDb.getMemberBalance(member_id)
+
+	balance = 0.0
+	for row in resultList:
+		balance += float(row['amount'])
+
+	return DenhacJsonLibrary.ObjToJson(dict(rows = resultList, balance = balance))
 
 
 
-# TODO - finish the html template JD coded and plug it in here
-#@app.route('/createmember')
-#def createmember():
-#	return render_template('createmember.html')
 
