@@ -52,11 +52,17 @@
     <Compile Include="MainMenu.Designer.cs">
       <DependentUpon>MainMenu.cs</DependentUpon>
     </Compile>
-    <Compile Include="MultiplePayments.cs">
+    <Compile Include="MemberAccount.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MultiplePayments.Designer.cs">
-      <DependentUpon>MultiplePayments.cs</DependentUpon>
+    <Compile Include="MemberAccount.Designer.cs">
+      <DependentUpon>MemberAccount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OpenBalances.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OpenBalances.Designer.cs">
+      <DependentUpon>OpenBalances.cs</DependentUpon>
     </Compile>
     <Compile Include="PaymentEntry.cs">
       <SubType>Form</SubType>
@@ -69,8 +75,11 @@
     <EmbeddedResource Include="MainMenu.resx">
       <DependentUpon>MainMenu.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MultiplePayments.resx">
-      <DependentUpon>MultiplePayments.cs</DependentUpon>
+    <EmbeddedResource Include="MemberAccount.resx">
+      <DependentUpon>MemberAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpenBalances.resx">
+      <DependentUpon>OpenBalances.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PaymentEntry.resx">
       <DependentUpon>PaymentEntry.cs</DependentUpon>
@@ -87,6 +96,7 @@
     <None Include="Properties\DataSources\DenhacAPI.ResponseObjects.GetPaymentTypesResponse.datasource" />
     <None Include="Properties\DataSources\DenhacAPI.ResponseObjects.PaymentType.datasource" />
     <None Include="Properties\DataSources\DenhacAPI.ResponseObjects.SearchMemberResponse.datasource" />
+    <None Include="Properties\DataSources\DenhacClientAPI.ResponseObjects.GetMemberBalanceResponse.datasource" />
     <None Include="Properties\DataSources\DenhacClientAPI.ResponseObjects.OpenBalanceResponse.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

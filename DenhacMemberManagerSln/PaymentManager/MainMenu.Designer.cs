@@ -38,6 +38,8 @@
             this.txt_server = new System.Windows.Forms.TextBox();
             this.btn_logout = new System.Windows.Forms.Button();
             this.btn_multiPayment = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.btn_importpaypal = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btn_memberPayment
@@ -48,7 +50,7 @@
             this.btn_memberPayment.Name = "btn_memberPayment";
             this.btn_memberPayment.Size = new System.Drawing.Size(186, 59);
             this.btn_memberPayment.TabIndex = 0;
-            this.btn_memberPayment.Text = "SINGLE PAYMENT/ ADJUSTMENT";
+            this.btn_memberPayment.Text = "ENTER PAYMENT/ ADJUSTMENT";
             this.btn_memberPayment.UseVisualStyleBackColor = true;
             this.btn_memberPayment.Click += new System.EventHandler(this.btn_memberPayment_Click);
             // 
@@ -116,7 +118,7 @@
             // btn_logout
             // 
             this.btn_logout.Enabled = false;
-            this.btn_logout.Location = new System.Drawing.Point(12, 451);
+            this.btn_logout.Location = new System.Drawing.Point(12, 475);
             this.btn_logout.Name = "btn_logout";
             this.btn_logout.Size = new System.Drawing.Size(208, 23);
             this.btn_logout.TabIndex = 8;
@@ -132,15 +134,38 @@
             this.btn_multiPayment.Name = "btn_multiPayment";
             this.btn_multiPayment.Size = new System.Drawing.Size(186, 59);
             this.btn_multiPayment.TabIndex = 9;
-            this.btn_multiPayment.Text = "BALANCE / MULTIPLE PAYMENTS";
+            this.btn_multiPayment.Text = "VIEW BALANCES";
             this.btn_multiPayment.UseVisualStyleBackColor = true;
             this.btn_multiPayment.Click += new System.EventHandler(this.btn_multiPayment_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(35, 501);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(154, 15);
+            this.label4.TabIndex = 10;
+            this.label4.Text = "Powered by Digimonkey";
+            // 
+            // btn_importpaypal
+            // 
+            this.btn_importpaypal.Enabled = false;
+            this.btn_importpaypal.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_importpaypal.Location = new System.Drawing.Point(24, 381);
+            this.btn_importpaypal.Name = "btn_importpaypal";
+            this.btn_importpaypal.Size = new System.Drawing.Size(186, 59);
+            this.btn_importpaypal.TabIndex = 11;
+            this.btn_importpaypal.Text = "IMPORT PAYPAL STATEMENT";
+            this.btn_importpaypal.UseVisualStyleBackColor = true;
             // 
             // MainMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(234, 486);
+            this.ClientSize = new System.Drawing.Size(234, 525);
+            this.Controls.Add(this.btn_importpaypal);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.btn_multiPayment);
             this.Controls.Add(this.btn_logout);
             this.Controls.Add(this.label3);
@@ -170,6 +195,8 @@
         private System.Windows.Forms.TextBox txt_server;
         private System.Windows.Forms.Button btn_logout;
         private System.Windows.Forms.Button btn_multiPayment;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button btn_importpaypal;
     }
 }
 

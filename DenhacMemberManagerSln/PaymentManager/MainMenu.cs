@@ -19,7 +19,7 @@ namespace PaymentManager
 
         private void btn_multiPayment_Click(object sender, EventArgs e)
         {
-            new MultiplePayments().ShowDialog();
+            new OpenBalances().ShowDialog();
         }
 
         private void btn_testConnection_Click(object sender, EventArgs e)

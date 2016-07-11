@@ -8,6 +8,6 @@ namespace DenhacClientAPI.ResponseObjects
 {
     public class OpenBalanceResponse : DenhacResponse
     {
-        public List<MemberResponse> rows { get; set; }
+        public List<Member> rows { get; set; }
     }
 }

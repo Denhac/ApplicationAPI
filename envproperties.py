@@ -20,3 +20,8 @@ ldap_prefix         = 'DENHAC\\'
 
 # Session-management variables
 session_key         = 'sessionkey'
+
+# These properties are loaded by DenhacEmailLibrary.py:
+smtp_server         = 'localhost'
+smtp_user           = 'emailuser'
+smtp_password       = 'emailpass'

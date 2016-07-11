@@ -55,6 +55,7 @@
             this.btn_submit = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.txt_amount = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_searchResults)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bs_searchMemberResponse)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bs_paymentTypesResponse)).BeginInit();
@@ -290,11 +291,21 @@
             this.txt_amount.Size = new System.Drawing.Size(170, 20);
             this.txt_amount.TabIndex = 15;
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(111, 386);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(139, 13);
+            this.label8.TabIndex = 16;
+            this.label8.Text = "(+ for Payment, - for Charge)";
+            // 
             // PaymentEntry
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(765, 446);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.txt_amount);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.btn_submit);
@@ -372,5 +383,6 @@
         private System.Windows.Forms.Button btn_submit;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txt_amount;
+        private System.Windows.Forms.Label label8;
     }
 }
