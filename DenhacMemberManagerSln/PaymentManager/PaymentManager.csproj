@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ImportStatement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImportStatement.Designer.cs">
+      <DependentUpon>ImportStatement.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainMenu.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -57,6 +63,12 @@
     </Compile>
     <Compile Include="MemberAccount.Designer.cs">
       <DependentUpon>MemberAccount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MemberForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MemberForm.Designer.cs">
+      <DependentUpon>MemberForm.cs</DependentUpon>
     </Compile>
     <Compile Include="OpenBalances.cs">
       <SubType>Form</SubType>
@@ -72,11 +84,17 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="ImportStatement.resx">
+      <DependentUpon>ImportStatement.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainMenu.resx">
       <DependentUpon>MainMenu.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MemberAccount.resx">
       <DependentUpon>MemberAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MemberForm.resx">
+      <DependentUpon>MemberForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OpenBalances.resx">
       <DependentUpon>OpenBalances.cs</DependentUpon>

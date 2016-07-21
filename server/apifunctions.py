@@ -1,12 +1,10 @@
-import sys
+import csv, io, itertools, logging, sys, time
+
 sys.path.insert(0, '/var/www/denhacpkg')
 sys.path.insert(0, '/var/www/server')
 sys.path.insert(0, '/var/www/log')
 
 import envproperties
-import itertools
-import logging
-import time
 from logging.handlers import RotatingFileHandler
 from flask import Flask, request, session, render_template, redirect#, url_for
 from DenhacLdapLibrary import DenhacLdapLibrary
@@ -40,7 +38,7 @@ if app.debug is not True:
 @app.before_request
 def before_request():
 	admin_services   = ['hello']
-	manager_services = ['memberpaymentreport', 'createMember', 'readMembers', 'readMember', 'createpayment', 'searchmember', 'getopenbalances', 'getmember', 'getmemberbalance']
+	manager_services = ['memberpaymentreport', 'createMember', 'readMembers', 'readMember', 'createpayment', 'searchmember', 'getopenbalances', 'getmember', 'getmemberbalance', 'importpaypaldata', 'createmember', 'editmember']
 
 	# Ensure member is logged in to access any APIs
 	if 'logged_in' not in session and request.endpoint != 'login' and request.endpoint != 'main':
@@ -239,6 +237,144 @@ def getmemberbalance(member_id):
 
 	return DenhacJsonLibrary.ObjToJson(dict(rows = resultList, balance = balance))
 
+@app.route('/importpaypaldata', methods=['POST'])
+def importpaypaldata():
 
+	# If post, they're sending us the file.
+	if request.method == 'POST':
+		response = ""
+		payment_type_ignore_list = ['Withdraw Funds to Bank Account','Invoice Sent','Request Received','Payment Sent','Temporary Hold','Debit Card Purchase']
 
+		memberDb = DenhacMemberDb()
+		numPayments  = 0
+		numUnapplied = 0
+		totalDues    = 0.0
+		totalFees    = 0.0
 
+		filedata = request.form['filedata']
+		memreader = csv.DictReader(io.StringIO(filedata))
+
+		for row in memreader:
+			(payment_type, from_email, to_email, name, gross, date, fee) = (str(row[' Type']), str(row[' From Email Address']), str(row[' To Email Address']), str(row[' Name']), str(row[' Gross']), str(row['Date']), str(row[' Fee']))
+			notes = "Paypal Payment: " + str(date)
+
+			# Check Payment Type
+			if payment_type in payment_type_ignore_list:
+				response += 'IGNORING Payment of Type: ' + payment_type + '\n'
+				continue
+
+			# Sometimes Paypal has the From and To email addresses backwards; I don't know why.
+			email = from_email
+			if email == 'treasurer@denhac.org':
+				email = to_email
+
+			# Ok, by this point we should have a payment.  Apply it.
+			try:
+				member = memberDb.getMemberByPaypalEmail(email)
+				memberDb.createPayment(member['id'], gross, 3, notes)
+				response    += 'Payment Applied: ' + member['lastName'] + ', Amount: ' + gross + '\n'
+				totalDues   += float(gross)
+				totalFees   += float(fee)
+				numPayments += 1
+
+			except IndexError:
+				response += '================================================\n'
+				response += 'Payment UNAPPLIED! Type: ' + payment_type + ', Name: ' + name + ', Amount: ' + gross + ', Date: ' + date + ', From Email: ' + from_email + '\n'
+				response += 'Better do it manually or someone might be mad...\n'
+				response += '================================================\n'
+				numUnapplied += 1
+
+		response += 'Done!'
+		response += '================================================\n'
+		response += '# of Applied Payments: ' + str(numPayments) + '\n'
+		response += '# of Unapplied Payments: ' + str(numUnapplied) + ' <--- ****** Enter these transactions into the Member DB manually ******\n'
+		response += 'Total Dues Collected: ' + str(totalDues) + '\n'
+		response += 'Total Paypal Fees Paid: ' + str(totalFees) + ' <--- ****** Enter this into WaveApps manually ******\n'
+		response += '================================================\n'
+
+		return DenhacJsonLibrary.ObjToJson(dict(response = response, numPayments = numPayments, numUnapplied = numUnapplied, totalDues = totalDues, totalFees = totalFees))
+
+def setFieldsArray():
+	fields = dict()
+
+	# Required fields
+	if 'lastName' in request.form and request.form['lastName'] != '':
+		fields['lastName'] = request.form['lastName']
+	if 'firstName' in request.form and request.form['firstName'] != '':
+		fields['firstName'] = request.form['firstName']
+	if 'birthdate' in request.form and request.form['birthdate'] != '':
+		fields['birthdate'] = request.form['birthdate']
+	if 'streetAddress1' in request.form and request.form['streetAddress1'] != '':
+		fields['streetAddress1'] = request.form['streetAddress1']
+	if 'zipCode' in request.form and request.form['zipCode'] != '':
+		fields['zipCode'] = request.form['zipCode']
+	if 'phoneNumber' in request.form and request.form['phoneNumber'] != '':
+		fields['phoneNumber'] = request.form['phoneNumber']
+	if 'paymentAmount' in request.form and request.form['paymentAmount'] != '':
+		fields['paymentAmount'] = request.form['paymentAmount']
+	if 'contact_email' in request.form and request.form['contact_email'] != '':
+		fields['contact_email'] = request.form['contact_email']
+	if 'paypal_email' in request.form and request.form['paypal_email'] != '':
+		fields['paypal_email'] = request.form['paypal_email']
+	if 'join_date' in request.form and request.form['join_date'] != '':
+		fields['join_date'] = request.form['join_date']
+	if 'prox_card_id' in request.form and request.form['prox_card_id'] != '':
+		fields['prox_card_id'] = request.form['prox_card_id']
+
+	# Non-required fields
+	if 'middleInitial' in request.form and request.form['middleInitial'] != '':
+		fields['middleInitial'] = request.form['middleInitial']
+	if 'streetAddress2' in request.form and request.form['streetAddress2'] != '':
+		fields['streetAddress2'] = request.form['streetAddress2']
+	if 'city' in request.form and request.form['city'] != '':
+		fields['city'] = request.form['city']
+	if 'businessPhone' in request.form and request.form['businessPhone'] != '':
+		fields['businessPhone'] = request.form['businessPhone']
+	if 'emerContact1' in request.form and request.form['emerContact1'] != '':
+		fields['emerContact1'] = request.form['emerContact1']
+	if 'emerPhone1' in request.form and request.form['emerPhone1'] != '':
+		fields['emerPhone1'] = request.form['emerPhone1']
+	if 'emerAddress1' in request.form and request.form['emerAddress1'] != '':
+		fields['emerAddress1'] = request.form['emerAddress1']
+	if 'emerRelation1' in request.form and request.form['emerRelation1'] != '':
+		fields['emerRelation1'] = request.form['emerRelation1']
+	if 'emerContact2' in request.form and request.form['emerContact2'] != '':
+		fields['emerContact2'] = request.form['emerContact2']
+	if 'emerPhone2' in request.form and request.form['emerPhone2'] != '':
+		fields['emerPhone2'] = request.form['emerPhone2']
+	if 'emerAddress2' in request.form and request.form['emerAddress2'] != '':
+		fields['emerAddress2'] = request.form['emerAddress2']
+	if 'emerRelation2' in request.form and request.form['emerRelation2'] != '':
+		fields['emerRelation2'] = request.form['emerRelation2']
+	if 'medicalHealthProblems' in request.form and request.form['medicalHealthProblems'] != '':
+		fields['medicalHealthProblems'] = request.form['medicalHealthProblems']
+	if 'active' in request.form and request.form['active'] != '':
+		fields['active'] = request.form['active']
+	if 'onAutoPay' in request.form and request.form['onAutoPay'] != '':
+		fields['onAutoPay'] = request.form['onAutoPay']
+	if 'isManager' in request.form and request.form['isManager'] != '':
+		fields['isManager'] = request.form['isManager']
+	if 'isAdmin' in request.form and request.form['isAdmin'] != '':
+		fields['isAdmin'] = request.form['isAdmin']
+	if 'ad_username' in request.form and request.form['ad_username'] != '':
+		fields['ad_username'] = request.form['ad_username']
+
+	return fields
+
+@app.route('/createmember', methods=['POST'])
+def createmember():
+	fields = setFieldsArray()
+
+	memberDb = DenhacMemberDb()
+	memberDb.createMember(fields)
+
+	return DenhacJsonLibrary.ObjToJson(dict(success = True))
+
+@app.route('/editmember/<member_id>', methods=['POST'])
+def editmember(member_id):
+	fields = setFieldsArray()
+
+	memberDb = DenhacMemberDb()
+	memberDb.editMember(member_id, fields)
+
+	return DenhacJsonLibrary.ObjToJson(dict(success = True))

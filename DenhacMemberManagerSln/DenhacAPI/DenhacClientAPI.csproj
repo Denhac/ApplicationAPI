@@ -44,23 +44,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ResponseObjects\CreateMemberResponse - Copy.cs" />
     <Compile Include="ResponseObjects\DenhacAccountRow.cs" />
-    <Compile Include="ResponseObjects\DenhacDate.cs" />
     <Compile Include="ResponseObjects\DenhacResponse.cs" />
     <Compile Include="ResponseObjects\GetPaymentTypesResponse.cs" />
     <Compile Include="ResponseObjects\CreatePaymentResponse.cs" />
+    <Compile Include="ResponseObjects\EditMemberResponse.cs" />
     <Compile Include="ResponseObjects\Member.cs" />
     <Compile Include="ResponseObjects\GetMemberBalanceResponse.cs" />
+    <Compile Include="ResponseObjects\ImportPaypalDataResponse.cs" />
     <Compile Include="ResponseObjects\OpenBalanceResponse.cs" />
     <Compile Include="ResponseObjects\SearchMemberResponse.cs" />
     <Compile Include="ResponseObjects\LogoutResponse.cs" />
     <Compile Include="ResponseObjects\LoginResponse.cs" />
+    <Compile Include="Services\EditMemberService.cs" />
     <Compile Include="Services\DenhacService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\GetMemberBalanceService.cs" />
     <Compile Include="Services\GetPaymentTypesService.cs" />
     <Compile Include="Services\CreatePaymentService.cs" />
     <Compile Include="Services\GetOpenBalanceService.cs" />
+    <Compile Include="Services\CreateMemberService.cs" />
+    <Compile Include="Services\ImportPaypalDataService.cs" />
     <Compile Include="Services\SearchMemberService.cs" />
     <Compile Include="Services\LogoutService.cs" />
     <Compile Include="Services\LoginService.cs" />

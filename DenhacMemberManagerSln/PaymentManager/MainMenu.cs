@@ -22,6 +22,16 @@ namespace PaymentManager
             new OpenBalances().ShowDialog();
         }
 
+        private void btn_importpaypal_Click(object sender, EventArgs e)
+        {
+            new ImportStatement().ShowDialog();
+        }
+
+        private void btn_newmember_Click(object sender, EventArgs e)
+        {
+            new MemberForm(MemberForm.MemberMode.Create, null).ShowDialog();
+        }
+
         private void btn_testConnection_Click(object sender, EventArgs e)
         {
             DenhacService.hostName = txt_server.Text;
@@ -76,8 +86,10 @@ namespace PaymentManager
             btn_testConnection.Enabled = true;
             btn_logout.Enabled = false;
 
+            btn_newmember.Enabled = false;
             btn_memberPayment.Enabled = false;
             btn_multiPayment.Enabled = false;
+            btn_importpaypal.Enabled = false;
         }
 
         private void DisableLoginOptions()
@@ -89,8 +101,10 @@ namespace PaymentManager
             btn_testConnection.Enabled = false;
             btn_logout.Enabled = true;
 
+            btn_newmember.Enabled = true;
             btn_memberPayment.Enabled = true;
             btn_multiPayment.Enabled = true;
+            btn_importpaypal.Enabled = true;
         }
     }
 }

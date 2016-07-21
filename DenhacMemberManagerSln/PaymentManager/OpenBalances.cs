@@ -8,7 +8,7 @@ namespace PaymentManager
 {
     public partial class OpenBalances : Form
     {
-        private Member member;  // To store currently-selected row to pass to MemberAccount form
+        private DenhacClientAPI.ResponseObjects.Member member;  // To store currently-selected row to pass to MemberAccount form
 
         public OpenBalances()
         {
@@ -30,10 +30,9 @@ namespace PaymentManager
                     bs_openBalanceResponse.DataSource = service.rows;
 
                     // Default to selecting the first row
-                    //dgv_openBalances.Rows[0].Selected = true;
                     if (service.rows.Count > 0)
                     {
-                        member = (Member)dgv_openBalances.Rows[0].DataBoundItem;
+                        member = (DenhacClientAPI.ResponseObjects.Member)dgv_openBalances.Rows[0].DataBoundItem;
                         btn_viewAccount.Enabled = true;
                     }
                     else
@@ -53,7 +52,7 @@ namespace PaymentManager
             if (e.RowIndex >= 0)
             {
                 DataGridViewRow row = dgv_openBalances.Rows[e.RowIndex];
-                member = (Member)dgv_openBalances.CurrentRow.DataBoundItem;
+                member = (DenhacClientAPI.ResponseObjects.Member)dgv_openBalances.CurrentRow.DataBoundItem;
             }
         }
 
@@ -67,6 +66,9 @@ namespace PaymentManager
             btn_viewAccount_Click(sender, e);
         }
 
-
+        private void btn_editmember_Click(object sender, EventArgs e)
+        {
+            new MemberForm(MemberForm.MemberMode.Update, member).ShowDialog();
+        }
     }
 }

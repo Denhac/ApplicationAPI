@@ -30,6 +30,11 @@
         {
             this.components = new System.ComponentModel.Container();
             this.dgv_memberAccount = new System.Windows.Forms.DataGridView();
+            this.transactiondateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.amountDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.typeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.notesDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bs_memberaccount = new System.Windows.Forms.BindingSource(this.components);
             this.lbl_firstName = new System.Windows.Forms.Label();
             this.lbl_lastName = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -50,11 +55,7 @@
             this.label9 = new System.Windows.Forms.Label();
             this.lbl_balance = new System.Windows.Forms.Label();
             this.btn_back = new System.Windows.Forms.Button();
-            this.bs_memberaccount = new System.Windows.Forms.BindingSource(this.components);
-            this.transactiondateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.amountDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.typeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.notesDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btn_editmember = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_memberAccount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bs_memberaccount)).BeginInit();
             this.SuspendLayout();
@@ -74,10 +75,43 @@
             this.dgv_memberAccount.Size = new System.Drawing.Size(649, 382);
             this.dgv_memberAccount.TabIndex = 2;
             // 
+            // transactiondateDataGridViewTextBoxColumn
+            // 
+            this.transactiondateDataGridViewTextBoxColumn.DataPropertyName = "transaction_date";
+            this.transactiondateDataGridViewTextBoxColumn.HeaderText = "transaction_date";
+            this.transactiondateDataGridViewTextBoxColumn.Name = "transactiondateDataGridViewTextBoxColumn";
+            this.transactiondateDataGridViewTextBoxColumn.Width = 120;
+            // 
+            // amountDataGridViewTextBoxColumn
+            // 
+            this.amountDataGridViewTextBoxColumn.DataPropertyName = "amount";
+            this.amountDataGridViewTextBoxColumn.HeaderText = "amount";
+            this.amountDataGridViewTextBoxColumn.Name = "amountDataGridViewTextBoxColumn";
+            this.amountDataGridViewTextBoxColumn.Width = 50;
+            // 
+            // typeDataGridViewTextBoxColumn
+            // 
+            this.typeDataGridViewTextBoxColumn.DataPropertyName = "type";
+            this.typeDataGridViewTextBoxColumn.HeaderText = "type";
+            this.typeDataGridViewTextBoxColumn.Name = "typeDataGridViewTextBoxColumn";
+            this.typeDataGridViewTextBoxColumn.Width = 80;
+            // 
+            // notesDataGridViewTextBoxColumn
+            // 
+            this.notesDataGridViewTextBoxColumn.DataPropertyName = "notes";
+            this.notesDataGridViewTextBoxColumn.HeaderText = "notes";
+            this.notesDataGridViewTextBoxColumn.Name = "notesDataGridViewTextBoxColumn";
+            this.notesDataGridViewTextBoxColumn.Width = 350;
+            // 
+            // bs_memberaccount
+            // 
+            this.bs_memberaccount.DataMember = "rows";
+            this.bs_memberaccount.DataSource = typeof(DenhacClientAPI.ResponseObjects.GetMemberBalanceResponse);
+            // 
             // lbl_firstName
             // 
             this.lbl_firstName.AutoSize = true;
-            this.lbl_firstName.Location = new System.Drawing.Point(57, 36);
+            this.lbl_firstName.Location = new System.Drawing.Point(78, 36);
             this.lbl_firstName.Name = "lbl_firstName";
             this.lbl_firstName.Size = new System.Drawing.Size(52, 13);
             this.lbl_firstName.TabIndex = 3;
@@ -257,44 +291,22 @@
             this.btn_back.UseVisualStyleBackColor = true;
             this.btn_back.Click += new System.EventHandler(this.btn_back_Click);
             // 
-            // bs_memberaccount
+            // btn_editmember
             // 
-            this.bs_memberaccount.DataMember = "rows";
-            this.bs_memberaccount.DataSource = typeof(DenhacClientAPI.ResponseObjects.GetMemberBalanceResponse);
-            // 
-            // transactiondateDataGridViewTextBoxColumn
-            // 
-            this.transactiondateDataGridViewTextBoxColumn.DataPropertyName = "transaction_date";
-            this.transactiondateDataGridViewTextBoxColumn.HeaderText = "transaction_date";
-            this.transactiondateDataGridViewTextBoxColumn.Name = "transactiondateDataGridViewTextBoxColumn";
-            this.transactiondateDataGridViewTextBoxColumn.Width = 120;
-            // 
-            // amountDataGridViewTextBoxColumn
-            // 
-            this.amountDataGridViewTextBoxColumn.DataPropertyName = "amount";
-            this.amountDataGridViewTextBoxColumn.HeaderText = "amount";
-            this.amountDataGridViewTextBoxColumn.Name = "amountDataGridViewTextBoxColumn";
-            this.amountDataGridViewTextBoxColumn.Width = 50;
-            // 
-            // typeDataGridViewTextBoxColumn
-            // 
-            this.typeDataGridViewTextBoxColumn.DataPropertyName = "type";
-            this.typeDataGridViewTextBoxColumn.HeaderText = "type";
-            this.typeDataGridViewTextBoxColumn.Name = "typeDataGridViewTextBoxColumn";
-            this.typeDataGridViewTextBoxColumn.Width = 80;
-            // 
-            // notesDataGridViewTextBoxColumn
-            // 
-            this.notesDataGridViewTextBoxColumn.DataPropertyName = "notes";
-            this.notesDataGridViewTextBoxColumn.HeaderText = "notes";
-            this.notesDataGridViewTextBoxColumn.Name = "notesDataGridViewTextBoxColumn";
-            this.notesDataGridViewTextBoxColumn.Width = 350;
+            this.btn_editmember.Location = new System.Drawing.Point(543, 97);
+            this.btn_editmember.Name = "btn_editmember";
+            this.btn_editmember.Size = new System.Drawing.Size(118, 38);
+            this.btn_editmember.TabIndex = 23;
+            this.btn_editmember.Text = "Edit Member Data";
+            this.btn_editmember.UseVisualStyleBackColor = true;
+            this.btn_editmember.Click += new System.EventHandler(this.btn_editmember_Click);
             // 
             // MemberAccount
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(673, 585);
+            this.Controls.Add(this.btn_editmember);
             this.Controls.Add(this.btn_back);
             this.Controls.Add(this.lbl_balance);
             this.Controls.Add(this.label9);
@@ -354,5 +366,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn amountDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn typeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn notesDataGridViewTextBoxColumn;
+        private System.Windows.Forms.Button btn_editmember;
     }
 }

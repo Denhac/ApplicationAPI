@@ -17,7 +17,7 @@ namespace PaymentManager
     {
         private Member member;
 
-        public MemberAccount(Member i_member)
+        public MemberAccount(DenhacClientAPI.ResponseObjects.Member i_member)
         {
             this.member = i_member;
             InitializeComponent();
@@ -49,14 +49,16 @@ namespace PaymentManager
             {
                 MessageBox.Show(exception.ToString());
             }
-
-
-
         }
 
         private void btn_back_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void btn_editmember_Click(object sender, EventArgs e)
+        {
+            new MemberForm(MemberForm.MemberMode.Update, member).ShowDialog();
         }
     }
 }

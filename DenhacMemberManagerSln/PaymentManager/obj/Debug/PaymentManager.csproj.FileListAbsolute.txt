@@ -14,3 +14,5 @@ c:\users\blueblood\documents\visual studio 2015\Projects\DenhacMemberManagerSln\
 c:\users\blueblood\documents\visual studio 2015\Projects\DenhacMemberManagerSln\PaymentManager\bin\Debug\Newtonsoft.Json.xml
 C:\Users\Blueblood\Documents\Visual Studio 2015\Projects\DenhacMemberManagerSln\PaymentManager\obj\Debug\PaymentManager.OpenBalances.resources
 C:\Users\Blueblood\Documents\Visual Studio 2015\Projects\DenhacMemberManagerSln\PaymentManager\obj\Debug\PaymentManager.MemberAccount.resources
+C:\Users\Blueblood\Documents\Visual Studio 2015\Projects\DenhacMemberManagerSln\PaymentManager\obj\Debug\PaymentManager.ImportStatement.resources
+C:\Users\Blueblood\Documents\Visual Studio 2015\Projects\DenhacMemberManagerSln\PaymentManager\obj\Debug\PaymentManager.MemberForm.resources

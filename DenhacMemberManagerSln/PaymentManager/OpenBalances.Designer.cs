@@ -31,10 +31,10 @@
             this.components = new System.ComponentModel.Container();
             this.btn_back = new System.Windows.Forms.Button();
             this.dgv_openBalances = new System.Windows.Forms.DataGridView();
-            this.phoneNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ad_username = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bs_openBalanceResponse = new System.Windows.Forms.BindingSource(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.btn_viewAccount = new System.Windows.Forms.Button();
+            this.btn_editmember = new System.Windows.Forms.Button();
             this.balanceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lastNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -44,16 +44,17 @@
             this.onAutoPayDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.contactemailDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.paypalemailDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bs_openBalanceResponse = new System.Windows.Forms.BindingSource(this.components);
+            this.phoneNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ad_username = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_openBalances)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bs_openBalanceResponse)).BeginInit();
             this.SuspendLayout();
             // 
             // btn_back
             // 
-            this.btn_back.Location = new System.Drawing.Point(13, 439);
+            this.btn_back.Location = new System.Drawing.Point(13, 415);
             this.btn_back.Name = "btn_back";
-            this.btn_back.Size = new System.Drawing.Size(75, 23);
+            this.btn_back.Size = new System.Drawing.Size(138, 48);
             this.btn_back.TabIndex = 0;
             this.btn_back.Text = "Back";
             this.btn_back.UseVisualStyleBackColor = true;
@@ -83,17 +84,10 @@
             this.dgv_openBalances.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_openBalances_CellClick);
             this.dgv_openBalances.DoubleClick += new System.EventHandler(this.dgv_openBalances_DoubleClick);
             // 
-            // phoneNumber
+            // bs_openBalanceResponse
             // 
-            this.phoneNumber.DataPropertyName = "phoneNumber";
-            this.phoneNumber.HeaderText = "phoneNumber";
-            this.phoneNumber.Name = "phoneNumber";
-            // 
-            // ad_username
-            // 
-            this.ad_username.DataPropertyName = "ad_username";
-            this.ad_username.HeaderText = "ad_username";
-            this.ad_username.Name = "ad_username";
+            this.bs_openBalanceResponse.DataMember = "rows";
+            this.bs_openBalanceResponse.DataSource = typeof(DenhacClientAPI.ResponseObjects.OpenBalanceResponse);
             // 
             // label1
             // 
@@ -101,9 +95,9 @@
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(9, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(175, 13);
+            this.label1.Size = new System.Drawing.Size(342, 13);
             this.label1.TabIndex = 2;
-            this.label1.Text = "Members with open balances:";
+            this.label1.Text = "Members with open balances (double-click to view details):";
             // 
             // btn_viewAccount
             // 
@@ -114,6 +108,16 @@
             this.btn_viewAccount.Text = "View Account";
             this.btn_viewAccount.UseVisualStyleBackColor = true;
             this.btn_viewAccount.Click += new System.EventHandler(this.btn_viewAccount_Click);
+            // 
+            // btn_editmember
+            // 
+            this.btn_editmember.Location = new System.Drawing.Point(741, 415);
+            this.btn_editmember.Name = "btn_editmember";
+            this.btn_editmember.Size = new System.Drawing.Size(138, 48);
+            this.btn_editmember.TabIndex = 4;
+            this.btn_editmember.Text = "Edit Member Data";
+            this.btn_editmember.UseVisualStyleBackColor = true;
+            this.btn_editmember.Click += new System.EventHandler(this.btn_editmember_Click);
             // 
             // balanceDataGridViewTextBoxColumn
             // 
@@ -154,6 +158,7 @@
             this.activeDataGridViewCheckBoxColumn.DataPropertyName = "active";
             this.activeDataGridViewCheckBoxColumn.HeaderText = "active";
             this.activeDataGridViewCheckBoxColumn.Name = "activeDataGridViewCheckBoxColumn";
+            this.activeDataGridViewCheckBoxColumn.ReadOnly = true;
             this.activeDataGridViewCheckBoxColumn.Width = 40;
             // 
             // onAutoPayDataGridViewCheckBoxColumn
@@ -161,6 +166,7 @@
             this.onAutoPayDataGridViewCheckBoxColumn.DataPropertyName = "onAutoPay";
             this.onAutoPayDataGridViewCheckBoxColumn.HeaderText = "AutoPay";
             this.onAutoPayDataGridViewCheckBoxColumn.Name = "onAutoPayDataGridViewCheckBoxColumn";
+            this.onAutoPayDataGridViewCheckBoxColumn.ReadOnly = true;
             this.onAutoPayDataGridViewCheckBoxColumn.Width = 40;
             // 
             // contactemailDataGridViewTextBoxColumn
@@ -177,16 +183,24 @@
             this.paypalemailDataGridViewTextBoxColumn.Name = "paypalemailDataGridViewTextBoxColumn";
             this.paypalemailDataGridViewTextBoxColumn.Width = 200;
             // 
-            // bs_openBalanceResponse
+            // phoneNumber
             // 
-            this.bs_openBalanceResponse.DataMember = "rows";
-            this.bs_openBalanceResponse.DataSource = typeof(DenhacClientAPI.ResponseObjects.OpenBalanceResponse);
+            this.phoneNumber.DataPropertyName = "phoneNumber";
+            this.phoneNumber.HeaderText = "phoneNumber";
+            this.phoneNumber.Name = "phoneNumber";
+            // 
+            // ad_username
+            // 
+            this.ad_username.DataPropertyName = "ad_username";
+            this.ad_username.HeaderText = "ad_username";
+            this.ad_username.Name = "ad_username";
             // 
             // OpenBalances
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1104, 475);
+            this.Controls.Add(this.btn_editmember);
             this.Controls.Add(this.btn_viewAccount);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dgv_openBalances);
@@ -207,6 +221,8 @@
         private System.Windows.Forms.DataGridView dgv_openBalances;
         private System.Windows.Forms.BindingSource bs_openBalanceResponse;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button btn_viewAccount;
+        private System.Windows.Forms.Button btn_editmember;
         private System.Windows.Forms.DataGridViewTextBoxColumn balanceDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn lastNameDataGridViewTextBoxColumn;
@@ -218,6 +234,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn paypalemailDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn phoneNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn ad_username;
-        private System.Windows.Forms.Button btn_viewAccount;
     }
 }

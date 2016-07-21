@@ -16,10 +16,18 @@ namespace DenhacClientAPI.Services
             using (HttpClientHandler httpHandler = new HttpClientHandler
             {
                 AllowAutoRedirect = true,
-                UseCookies = true,
-                CookieContainer = cookies
+                UseCookies = true
             })
             {
+                if (cookies != null)
+                {
+                    httpHandler.CookieContainer = cookies;
+                }
+                else
+                {
+                    httpHandler.CookieContainer = new CookieContainer();
+                }
+
                 using (HttpClient client = new HttpClient(httpHandler))
                 {
                     using (HttpResponseMessage response = client.GetAsync(URI).Result)
@@ -37,10 +45,18 @@ namespace DenhacClientAPI.Services
                 using (HttpClientHandler httpHandler = new HttpClientHandler
                 {
                     AllowAutoRedirect = true,
-                    UseCookies = true,
-                    CookieContainer = new CookieContainer()
+                    UseCookies = true
                 })
                 {
+                    if (cookies != null)
+                    {
+                        httpHandler.CookieContainer = cookies;
+                    }
+                    else
+                    {
+                        httpHandler.CookieContainer = new CookieContainer();
+                    }
+
                     using (HttpClient client = new HttpClient(httpHandler))
                     {
                         // Using .Result like this turns it into a synchronous (blocking) call.

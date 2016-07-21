@@ -131,17 +131,13 @@ class DenhacMemberDb(DenhacDb):
                 order by transaction_date desc"""
         return self.executeQueryGetAllRows(sql, [member_id,member_id])
 
-
-
-
-
-
-    def createMember(self, fields):
+    def setMemberFieldDefaults(self, fields):
         # Check for all required fields
         if  ('lastName' not in fields or
             'firstName' not in fields or
             'birthdate' not in fields or
             'streetAddress1' not in fields or
+            'zipCode' not in fields or
             'phoneNumber' not in fields or
             'paymentAmount' not in fields or
             'contact_email' not in fields or
@@ -151,17 +147,15 @@ class DenhacMemberDb(DenhacDb):
 
             raise ValueError("Missing a required field.")
 
-        # Now, fill in any empty non-default values
+        # Fill in any empty non-default, non-required values in our fields array
         if 'middleInitial' not in fields:
             fields['middleInitial'] = ''
         if 'streetAddress2' not in fields:
             fields['streetAddress2'] = ''
         if 'city' not in fields:
             fields['city'] = ''
-        if 'zipCode' not in fields:
-            fields['zipCode'] = ''
-        if 'businessNumber' not in fields:
-            fields['businessNumber'] = ''
+        if 'businessPhone' not in fields:
+            fields['businessPhone'] = ''
         if 'emerContact1' not in fields:
             fields['emerContact1'] = ''
         if 'emerPhone1' not in fields:
@@ -178,42 +172,87 @@ class DenhacMemberDb(DenhacDb):
             fields['emerAddress2'] = ''
         if 'emerRelation2' not in fields:
             fields['emerRelation2'] = ''
-        if 'medicalConditionList' not in fields:
-            fields['medicalConditionList'] = ''
+        if 'medicalHealthProblems' not in fields:
+            fields['medicalHealthProblems'] = ''
         if 'gnuCashId' not in fields:
             fields['gnuCashId'] = ''
         if 'active' not in fields:
             fields['active'] = '1'
         if 'onAutoPay' not in fields:
-            fields['onAutoPay'] = ''
+            fields['onAutoPay'] = '0'
         if 'isManager' not in fields:
-            fields['isManager'] = ''
+            fields['isManager'] = '0'
         if 'isAdmin' not in fields:
-            fields['isAdmin'] = ''
+            fields['isAdmin'] = '0'
         if 'ad_username' not in fields:
             fields['ad_username'] = ''
         if 'prox_card_id' not in fields:
             fields['prox_card_id'] = ''
-        if 'driver_license' not in fields:
-            fields['driver_license'] = ''
+
+        return fields
+
+    def createMember(self, fields):
+        # Check for required fields and fill in any default values not specified
+        fields = self.setMemberFieldDefaults(fields)
 
         sql = """INSERT INTO `memberdb`.`member`
                 (`lastName`,`firstName`,`middleInitial`,`birthdate`,`streetAddress1`,`streetAddress2`,`city`,
                 `zipCode`,`phoneNumber`,`businessNumber`,`emerContact1`,`emerPhone1`,`emerAddress1`,`emerRelation1`,
-                `emerContact2`,`emerPhone2`,`emerAddress2`,`emerRelation2`,`medicalConditionList`,`gnuCashId`,`paymentAmount`,`active`,
-                `onAutoPay`,`isManager`,`isAdmin`,`ad_username`,`contact_email`,`paypal_email`,`join_date`,`prox_card_id`,`driver_license`)
+                `emerContact2`,`emerPhone2`,`emerAddress2`,`emerRelation2`,`medicalConditionList`,`paymentAmount`,`active`,
+                `onAutoPay`,`isManager`,`isAdmin`,`ad_username`,`contact_email`,`paypal_email`,`join_date`,`prox_card_id`)
                 VALUES
-                (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
                 """
+
         params = [fields['lastName'], fields['firstName'], fields['middleInitial'], fields['birthdate'], fields['streetAddress1'], fields['streetAddress2'], fields['city'],
-                  fields['zipCode'], fields['phoneNumber'], fields['businessNumber'], fields['emerContact1'], fields['emerPhone1'], fields['emerAddress1'], fields['emerRelation1'],
-                  fields['emerContact2'], fields['emerPhone2'], fields['emerAddress2'], fields['emerRelation2'], fields['medicalConditionList'], fields['gnuCashId'], fields['paymentAmount'], fields['active'],
-                  fields['onAutoPay'], fields['isManager'], fields['isAdmin'], fields['ad_username'], fields['contact_email'], fields['paypal_email'], fields['join_date'], fields['prox_card_id'], fields['driver_license']]
+                  fields['zipCode'], fields['phoneNumber'], fields['businessPhone'], fields['emerContact1'], fields['emerPhone1'], fields['emerAddress1'], fields['emerRelation1'],
+                  fields['emerContact2'], fields['emerPhone2'], fields['emerAddress2'], fields['emerRelation2'], fields['medicalHealthProblems'], fields['paymentAmount'], fields['active'],
+                  fields['onAutoPay'], fields['isManager'], fields['isAdmin'], fields['ad_username'], fields['contact_email'], fields['paypal_email'], fields['join_date'], fields['prox_card_id']]
 
         self.executeQueryNoResult(sql, params)
 
+    def editMember(self, member_id, fields):
+        # Check for required fields and fill in any default values not specified
+        fields = self.setMemberFieldDefaults(fields)
 
+        sql = """UPDATE `memberdb`.`member`
+                SET
+                `lastName` = %s,
+                `firstName` = %s,
+                `middleInitial` = %s,
+                `birthdate` = %s,
+                `streetAddress1` = %s,
+                `streetAddress2` = %s,
+                `city` = %s,
+                `zipCode` = %s,
+                `phoneNumber` = %s,
+                `businessNumber` = %s,
+                `emerContact1` = %s,
+                `emerPhone1` = %s,
+                `emerAddress1` = %s,
+                `emerRelation1` = %s,
+                `emerContact2` = %s,
+                `emerPhone2` = %s,
+                `emerAddress2` = %s,
+                `emerRelation2` = %s,
+                `medicalConditionList` = %s,
+                `paymentAmount` = %s,
+                `active` = %s,
+                `onAutoPay` = %s,
+                `isManager` = %s,
+                `isAdmin` = %s,
+                `ad_username` = %s,
+                `contact_email` = %s,
+                `paypal_email` = %s,
+                `join_date` = %s,
+                `prox_card_id` = %s
+                WHERE `id` = %s
+                """
 
+        params = [fields['lastName'], fields['firstName'], fields['middleInitial'], fields['birthdate'], fields['streetAddress1'], fields['streetAddress2'], fields['city'],
+                  fields['zipCode'], fields['phoneNumber'], fields['businessPhone'], fields['emerContact1'], fields['emerPhone1'], fields['emerAddress1'], fields['emerRelation1'],
+                  fields['emerContact2'], fields['emerPhone2'], fields['emerAddress2'], fields['emerRelation2'], fields['medicalHealthProblems'], fields['paymentAmount'], fields['active'],
+                  fields['onAutoPay'], fields['isManager'], fields['isAdmin'], fields['ad_username'], fields['contact_email'], fields['paypal_email'], fields['join_date'], fields['prox_card_id'],
+                  member_id]
 
-
-
+        self.executeQueryNoResult(sql, params)
