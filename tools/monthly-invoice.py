@@ -21,7 +21,7 @@ appLogger.setLevel(logging.DEBUG)
 
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
-handler = RotatingFileHandler('script_logs/monthly-invoice.log', backupCount=24)
+handler = RotatingFileHandler('script_logs/monthly-invoice.log', backupCount=24, maxBytes=1024 * 1024)
 handler.setFormatter(formatter)
 handler.doRollover()	# Rotate the file every time we start up (that way we always know what to email at the end)
 appLogger.addHandler(handler)
@@ -39,7 +39,7 @@ for member in memberDb.getActiveMembers():
     params = [member['id'], member['paymentAmount'], notes]
 
     memberDb.executeQueryNoResult(sql, params)
-    appLogger.info('Created invoice for $' + str(member['paymentAmount']) + ' for member ' + member['lastName']) + ', ' + member['firstName'])
+    appLogger.info('Created invoice for $' + str(member['paymentAmount']) + ' for member ' + str(member['lastName']) + ', ' + str(member['firstName']))
 
 appLogger.debug("Done!")
 
