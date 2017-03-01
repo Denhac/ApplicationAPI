@@ -111,8 +111,7 @@ class DenhacMemberDb(DenhacDb):
                 member m2
                 where m2.id = inv_total.id
                 and   m2.id = pmt_total.id
-                and (inv_total.a - pmt_total.a) > 0
-                order by (inv_total.a - pmt_total.a) desc"""
+                order by m2.id"""
         return self.executeQueryGetAllRows(sql, [])
 
     def getMember(self, id):

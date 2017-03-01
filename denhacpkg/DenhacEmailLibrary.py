@@ -19,7 +19,7 @@ class DenhacEmail:
 		assert isinstance(toAddr, list)
 
 		# Denhac logic - if on the dev server; append and prepend to Subject line
-		if socket.gethostname() == 'devAPI.denhac.local':
+		if socket.gethostname() == 'devAPI.denhac.local' or socket.gethostname() == 'localhost':
 			subject = '*TEST*TEST* ' + subject + ' *TEST*TEST*'
 
 		# Build the message
@@ -31,13 +31,9 @@ class DenhacEmail:
 
 		msg.attach(MIMEText(body))
 
-#		# Send the email
-		smtp = smtplib.SMTP(envproperties.smtp_server)
-
-		# Login & Send
-		smtp.starttls()
+		# Login & Send the email
+		smtp = smtplib.SMTP_SSL(envproperties.smtp_server, envproperties.smtp_port)
 		smtp.login(envproperties.smtp_user, envproperties.smtp_password)
-
 		smtp.sendmail(fromAddr, toAddr, msg.as_string())
 		smtp.close()
 

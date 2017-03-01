@@ -24,7 +24,7 @@ app.secret_key = envproperties.session_key
 ###### Used to set up formatter for the logfile
 if app.debug is not True:
 	file_handler = RotatingFileHandler('/var/www/log/apifunctions.log', maxBytes=1024 * 1024 * 100, backupCount=20)
-	file_handler.setLevel(logging.ERROR)
+	file_handler.setLevel(logging.DEBUG)
 	formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 	file_handler.setFormatter(formatter)
 	app.logger.addHandler(file_handler)
@@ -240,59 +240,74 @@ def getmemberbalance(member_id):
 @app.route('/importpaypaldata', methods=['POST'])
 def importpaypaldata():
 
-	# If post, they're sending us the file.
-	if request.method == 'POST':
-		response = ""
-		payment_type_ignore_list = ['Withdraw Funds to Bank Account','Invoice Sent','Request Received','Payment Sent','Temporary Hold','Debit Card Purchase']
+	try:
+		# If post, they're sending us the file.
+		if request.method == 'POST':
+			response = ""
+			payment_type_ignore_list = ['Withdraw Funds to Bank Account','Invoice Sent','Request Received','Payment Sent','Temporary Hold','Debit Card Purchase','General Withdrawal']
 
-		memberDb = DenhacMemberDb()
-		numPayments  = 0
-		numUnapplied = 0
-		totalDues    = 0.0
-		totalFees    = 0.0
+			memberDb = DenhacMemberDb()
+			numPayments  = 0
+			numUnapplied = 0
+			totalDues    = 0.0
+			totalFees    = 0.0
 
-		filedata = request.form['filedata']
-		memreader = csv.DictReader(io.StringIO(filedata))
+			filedata = request.form['filedata']
+			memreader = csv.DictReader(io.StringIO(filedata))
 
-		for row in memreader:
-			(payment_type, from_email, to_email, name, gross, date, fee) = (str(row[' Type']), str(row[' From Email Address']), str(row[' To Email Address']), str(row[' Name']), str(row[' Gross']), str(row['Date']), str(row[' Fee']))
-			notes = "Paypal Payment: " + str(date)
+			for row in memreader:
+				(payment_type, from_email, to_email, name, gross, date, fee) = (str(row['Type']), str(row['From Email Address']), str(row['To Email Address']), str(row['Name']), str(row['Gross']), str(row['Date']), str(row['Fee']))
+				notes = "Paypal Payment: " + str(date)
 
-			# Check Payment Type
-			if payment_type in payment_type_ignore_list:
-				response += 'IGNORING Payment of Type: ' + payment_type + '\n'
-				continue
+				# Check Payment Type
+				if payment_type in payment_type_ignore_list:
+					response += 'IGNORING Payment of Type: ' + payment_type + '\n'
+					continue
 
-			# Sometimes Paypal has the From and To email addresses backwards; I don't know why.
-			email = from_email
-			if email == 'treasurer@denhac.org':
-				email = to_email
+				# Sometimes Paypal has the From and To email addresses backwards; I don't know why.
+				email = from_email
+				if email == 'treasurer@denhac.org':
+					email = to_email
 
-			# Ok, by this point we should have a payment.  Apply it.
-			try:
-				member = memberDb.getMemberByPaypalEmail(email)
-				memberDb.createPayment(member['id'], gross, 3, notes)
-				response    += 'Payment Applied: ' + member['lastName'] + ', Amount: ' + gross + '\n'
-				totalDues   += float(gross)
-				totalFees   += float(fee)
-				numPayments += 1
+				# Ok, by this point we should have a payment.  Apply it.
+				try:
+					# If we're missing the email address (for ex. from a website payment), ignore it and process next row
+					if not email:
+						raise IndexError
 
-			except IndexError:
-				response += '================================================\n'
-				response += 'Payment UNAPPLIED! Type: ' + payment_type + ', Name: ' + name + ', Amount: ' + gross + ', Date: ' + date + ', From Email: ' + from_email + '\n'
-				response += 'Better do it manually or someone might be mad...\n'
-				response += '================================================\n'
-				numUnapplied += 1
+					member = memberDb.getMemberByPaypalEmail(email)
+					memberDb.createPayment(member['id'], gross, 3, notes)
 
-		response += 'Done!'
-		response += '================================================\n'
-		response += '# of Applied Payments: ' + str(numPayments) + '\n'
-		response += '# of Unapplied Payments: ' + str(numUnapplied) + ' <--- ****** Enter these transactions into the Member DB manually ******\n'
-		response += 'Total Dues Collected: ' + str(totalDues) + '\n'
-		response += 'Total Paypal Fees Paid: ' + str(totalFees) + ' <--- ****** Enter this into WaveApps manually ******\n'
-		response += '================================================\n'
+					app.logger.error('Payment Applied: ' + member['lastName'] + ', Amount: ' + gross)
 
-		return DenhacJsonLibrary.ObjToJson(dict(response = response, numPayments = numPayments, numUnapplied = numUnapplied, totalDues = totalDues, totalFees = totalFees))
+					response    += 'Payment Applied: ' + member['lastName'] + ', Amount: ' + gross + '\n'
+					totalDues   += float(gross)
+					totalFees   += float(fee)
+					numPayments += 1
+
+				except IndexError:
+					response += '================================================\n'
+					response += 'Payment NOT APPLIED! Type: ' + payment_type + ', Name: ' + name + ', Amount: ' + gross + ', Date: ' + date + ', From Email: ' + from_email + '\n'
+					response += 'Better do it manually or someone might be mad...\n'
+					response += '================================================\n'
+
+					app.logger.error('Payment NOT APPLIED! Type: ' + payment_type + ', Name: ' + name + ', Amount: ' + gross + ', Date: ' + date + ', From Email: ' + from_email)
+
+					numUnapplied += 1
+				except:
+					return DenhacJsonLibrary.ReplyWithError("ERROR: Something failed for some reason.  Check the server logs for more details. Error: " + sys.exc_info()[0] + sys.exc_info()[1] + sys.exc_info()[2])
+
+			response += 'Done!'
+			response += '================================================\n'
+			response += '# of Applied Payments: ' + str(numPayments) + '\n'
+			response += '# of Unapplied Payments: ' + str(numUnapplied) + ' <--- ****** Enter these transactions into the Member DB manually ******\n'
+			response += 'Total Dues Collected: ' + str(totalDues) + '\n'
+			response += 'Total Paypal Fees Paid: ' + str(totalFees) + ' <--- ****** Enter this into WaveApps manually ******\n'
+			response += '================================================\n'
+
+			return DenhacJsonLibrary.ObjToJson(dict(response = response, numPayments = numPayments, numUnapplied = numUnapplied, totalDues = totalDues, totalFees = totalFees))
+	except:
+		return DenhacJsonLibrary.ReplyWithError("ERROR: Something failed for some reason.  Check the server logs for more details. Error: " + sys.exc_info()[0] + sys.exc_info()[1] + sys.exc_info()[2])
 
 def setFieldsArray():
 	fields = dict()

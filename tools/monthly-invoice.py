@@ -21,7 +21,7 @@ appLogger.setLevel(logging.DEBUG)
 
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
-handler = RotatingFileHandler('script_logs/monthly-invoice.log', backupCount=24, maxBytes=1024 * 1024)
+handler = RotatingFileHandler('/var/www/log/monthly-invoice.log', backupCount=24, maxBytes=1024 * 1024)
 handler.setFormatter(formatter)
 handler.doRollover()	# Rotate the file every time we start up (that way we always know what to email at the end)
 appLogger.addHandler(handler)
@@ -43,10 +43,10 @@ for member in memberDb.getActiveMembers():
 
 appLogger.debug("Done!")
 
-with open('script_logs/monthly-invoice.log', 'r') as myfile:
+with open('/var/www/log/monthly-invoice.log', 'r') as myfile:
 	data = myfile.read()
 
-	DenhacEmail.SendEmail(fromAddr = 'treasurer@denhac.org',
+	DenhacEmail.SendEmail(fromAddr = 'autobot@denhac.org',
 						  toAddr   = ['treasurer@denhac.org'],
 						  subject  = 'Monthly Invoicing Program',
 						  body     = data)

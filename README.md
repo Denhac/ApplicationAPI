@@ -28,8 +28,12 @@ On a Ubuntu distribution, try:
 
 We are using Flask as a framework to speed development and give us access to many pre-built libraries:
 
-    yum install pip
+    yum install epel-release
+    yum update
+
+    yum install python-pip python-ldap MySQL-python
     pip install flask
+    pip install --upgrade pip
 
 The Flask functions are loaded into Apache via the wsgi_mod:
 
@@ -56,7 +60,7 @@ This can be done any time you want to reset.  It will automatically drop existin
 <h3>Sources</h3>
     
 The best way to learn about the python bindings are to look at the example scripts at http://svn.gnucash.org/trac/browser/gnucash/trunk/src/optional/python-bindings/example_scripts
-  
+
 
 # References
 
@@ -76,7 +80,6 @@ setsebool -P httpd_can_network_connect on
 setenforce 0
 vi /etc/selinux/config
 #Change  SELINUX=permissive
-yum install python-ldap
 mkdir /var/www/log
 chmod 777 /var/www/log
 touch /var/www/log/apifunctions.log
