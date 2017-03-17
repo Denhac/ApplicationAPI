@@ -19,6 +19,7 @@ class DenhacDb:
     __metaclass__   = ABCMeta
     _connect        = None
     _lastUsedCursor = None
+    _inTransaction  = False
 
     # This method is overrided by the child classes
     @abstractmethod
@@ -53,6 +54,16 @@ class DenhacMemberDb(DenhacDb):
     def connect(self):
         if self._connect is None:
             self._connect = MySQLdb.connect(envproperties.member_db_server, envproperties.member_db_user, envproperties.member_db_password, envproperties.member_db_schema)
+
+    def startTransaction(self):
+        self.connect()
+        self.executeQueryNoResult("START TRANSACTION", None)
+
+    def commit(self):
+        self.executeQueryNoResult("COMMIT", None)
+
+    def rollback(self):
+        self.executeQueryNoResult("ROLLBACK", None)
 
     def getActiveMembers(self):
         sql = "SELECT * FROM member WHERE active = 1"

@@ -36,47 +36,56 @@ payment_type_ignore_list = ['Withdraw Funds to Bank Account','Invoice Sent','Req
 
 # Open a DB connection
 memberDb = DenhacMemberDb()
+memberDb.startTransaction()
 
-# Create a var to sum total dues collected
-numPayments = 0
-totalDues   = 0.0
-totalFees   = 0.0
+try:
+	# Create a var to sum total dues collected
+	numPayments = 0
+	totalDues   = 0.0
+	totalFees   = 0.0
 
-# Read and apply payments
-with open(filename, 'rb') as paymentfile:
-	memreader = csv.DictReader(paymentfile, delimiter=',', quotechar='"')
+	# Read and apply payments
+	with open(filename, 'rb') as paymentfile:
+		memreader = csv.DictReader(paymentfile, delimiter=',', quotechar='"')
 
-	for row in memreader:
-		(payment_type, from_email, to_email, name, gross, date, fee) = (str(row[' Type']), str(row[' From Email Address']), str(row[' To Email Address']), str(row[' Name']), str(row[' Gross']), str(row['Date']), str(row[' Fee']))
+		for row in memreader:
+			(payment_type, from_email, to_email, name, gross, date, fee) = (str(row['Type']), str(row['From Email Address']), str(row['To Email Address']), str(row['Name']), str(row['Gross']), str(row['Date']), str(row['Fee']))
 
-		# Check Payment Type
-		if payment_type in payment_type_ignore_list:
-			print 'IGNORING Payment of Type: ' + payment_type
-			continue
+			# Check Payment Type
+			if payment_type in payment_type_ignore_list:
+				print 'IGNORING Payment of Type: ' + payment_type
+				continue
 
-		# Sometimes Paypal has the From and To email addresses backwards; I don't know why.
-		email = from_email
-		if email == 'treasurer@denhac.org':
-			email = to_email
+			# Sometimes Paypal has the From and To email addresses backwards; I don't know why.
+			email = from_email
+			if email == 'treasurer@denhac.org':
+				email = to_email
 
-		# Ok, by this point we should have a payment.  Apply it.
-		try:
-			member = memberDb.getMemberByPaypalEmail(email)
-			memberDb.createPayment(member['id'], gross, 3, notes)
-			print 'Payment Applied: ' + member['lastName'] + ', Amount: ' + gross
-			totalDues   += float(gross)
-			totalFees   += float(fee)
-			numPayments += 1
+			# Ok, by this point we should have a payment.  Apply it.
+			try:
+				member = memberDb.getMemberByPaypalEmail(email)
+				memberDb.createPayment(member['id'], gross, 3, notes)
+				print 'Payment Applied: ' + member['lastName'] + ', Amount: ' + gross
+				totalDues   += float(gross)
+				totalFees   += float(fee)
+				numPayments += 1
 
-		except IndexError:
-			print '================================================'
-			print 'Payment UNAPPLIED! Type: ' + payment_type + ', Name: ' + name + ', Amount: ' + gross + ', Date: ' + date + ', From Email: ' + from_email
-			print 'Better do it manually or someone might be mad...'
-			print '================================================'
+			except IndexError:
+				print '================================================'
+				print 'Payment UNAPPLIED! Type: ' + payment_type + ', Name: ' + name + ', Amount: ' + gross + ', Date: ' + date + ', From Email: ' + from_email
+				print 'Better do it manually or someone might be mad...'
+				print '================================================'
 
-print 'Done!'
-print '================================================'
-print '# of Payments: ' + str(numPayments)
-print 'Total Dues Collected: ' + str(totalDues)
-print 'Total Paypal Fees Paid: ' + str(totalFees) + ' <--- ****** Enter this into WaveApps manually ******'
-print '================================================'
+	print '================================================'
+	print '# of Payments: ' + str(numPayments)
+	print 'Total Dues Collected: ' + str(totalDues)
+	print 'Total Paypal Fees Paid: ' + str(totalFees) + ' <--- ****** Enter this into WaveApps manually ******'
+	print '================================================'
+	print 'Committing changes...'
+	memberDb.commit()
+	print 'Done!'
+
+except:
+	print 'We failed... rolling back'
+	memberDb.rollback()
+	print 'DB Changes rolled back.'
