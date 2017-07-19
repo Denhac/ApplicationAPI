@@ -12,7 +12,7 @@ requests.packages.urllib3.disable_warnings()
 VERSION = '1.0'
 
 class ipa(object):
-    def __init__(self, username, password, server, domain, sslverify=False):
+    def __init__(self, username, password, server, domain, sslverify=False, logger=None):
         self.username = username
         self.password = password
         self.server = server
@@ -20,7 +20,7 @@ class ipa(object):
         self.sslverify = sslverify
         self.session = requests.Session()
         # self.cert = cert
-        self.log = logging.getLogger(__name__)
+        self.logger = logger or logging.getLogger(__name__)
 
         self._setUpLoginSession()
 
