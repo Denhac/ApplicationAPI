@@ -49,17 +49,18 @@ try:
 		memreader = csv.DictReader(paymentfile, delimiter=',', quotechar='"')
 
 		for row in memreader:
-			(payment_type, from_email, to_email, name, gross, date, fee) = (str(row['Type']), str(row['From Email Address']), str(row['To Email Address']), str(row['Name']), str(row['Gross']), str(row['Date']), str(row['Fee']))
+#			(payment_type, from_email, to_email, name, gross, date, fee) = (str(row['Description']), str(row['From Email Address']), str(row['To Email Address']), str(row['Name']), str(row['Gross']), str(row['Date']), str(row['Fee']))
+			(payment_type, from_email, name, gross, date, fee) = (str(row['Description']), str(row['From Email Address']), str(row['Name']), str(row['Gross']), str(row['Date']), str(row['Fee']))
 
 			# Check Payment Type
 			if payment_type in payment_type_ignore_list:
 				print 'IGNORING Payment of Type: ' + payment_type
 				continue
 
-			# Sometimes Paypal has the From and To email addresses backwards; I don't know why.
-			email = from_email
-			if email == 'treasurer@denhac.org':
-				email = to_email
+#			# Sometimes Paypal has the From and To email addresses backwards; I don't know why.
+#			email = from_email
+#			if email == 'treasurer@denhac.org':
+#				email = to_email
 
 			# Ok, by this point we should have a payment.  Apply it.
 			try:
@@ -89,3 +90,7 @@ except:
 	print 'We failed... rolling back'
 	memberDb.rollback()
 	print 'DB Changes rolled back.'
+
+	import traceback
+	exc_type, exc_value, exc_traceback = sys.exc_info()
+	traceback.print_exception(exc_type, exc_value, exc_traceback)

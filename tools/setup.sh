@@ -3,3 +3,8 @@ echo -e "[Service]\nPrivateTmp=no" > /etc/systemd/system/httpd.service.d/private
 systemctl daemon-reload
 apachectl restart
 systemctl show httpd | grep PrivateTmp
+
+
+
+pip install aws
+pip install --upgrade aws

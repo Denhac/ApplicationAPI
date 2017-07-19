@@ -1,0 +1,5 @@
+# 2am on the first day of every month
+0 2 1 * * /home/apiuser/tools/monthly-invoice.py > /dev/null 2>&1
+
+# 3am every day - Member DB backup
+0 3 * * * /home/apiuser/tools/backup-database.sh >> /var/www/log/backup-db.log 2>&1
