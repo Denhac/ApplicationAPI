@@ -109,19 +109,21 @@ class DenhacMemberDb(DenhacDb):
         return self.executeQueryGetAllRows(sql, [])
 
     def getOpenBalances(self):
-        sql = """select inv_total.a - pmt_total.a as balance, m2.*
+        sql = """select coalesce(inv_total.a - pmt_total.a, 0.0) as balance, m2.*
                 from
+                member m2
+                LEFT OUTER JOIN
                 (select m.id, coalesce(sum(amount), 0.0) a
                 from member m, invoice i
                 where m.id = i.member_id
-                group by m.id) inv_total,
+                group by m.id) inv_total
+                ON (m2.id = inv_total.id)
+                LEFT OUTER JOIN
                 (select m.id, coalesce(sum(amount), 0.0) a
                 from member m, payment p
                 where m.id = p.member_id
-                group by m.id) pmt_total,
-                member m2
-                where m2.id = inv_total.id
-                and   m2.id = pmt_total.id
+                group by m.id) pmt_total
+                ON (m2.id = pmt_total.id)
                 order by m2.id"""
         return self.executeQueryGetAllRows(sql, [])
 
