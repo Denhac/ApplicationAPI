@@ -7,9 +7,9 @@ sys.path.insert(0, '/var/www/log')
 import envproperties
 from logging.handlers import RotatingFileHandler
 from flask import Flask, request, session, render_template, redirect#, url_for
-from DenhacLdapLibrary import DenhacLdapLibrary
 from DenhacJsonLibrary import DenhacJsonLibrary
 from DenhacDbLibrary import *
+from DenhacFreeIPAAuth import ipa
 
 app = Flask(__name__)
 
@@ -149,9 +149,17 @@ def login():
 	except KeyError:
 		return DenhacJsonLibrary.ReplyWithError("Username and Password are required!")
 
-	myLdap = DenhacLdapLibrary()
+#	myLdap = DenhacLdapLibrary()
+#	try:
+#		myLdap.ldapBind(username, password)
 	try:
-		myLdap.ldapBind(username, password)
+		myFreeIpa = ipa(username=username,
+						password=password,
+						domain=envproperties.ldap_domain,
+						server=envproperties.ldap_server,
+						sslverify=False,
+						logger=app.logger)
+
 	except:
 		antiBruteForceLogic()
 		return DenhacJsonLibrary.ReplyWithError("Invalid username or password.")
@@ -500,3 +508,12 @@ def editmember(member_id):
 	memberDb.editMember(member_id, fields)
 
 	return DenhacJsonLibrary.ObjToJson(dict(success = True))
+
+
+
+
+
+#@app.route('/testldap')
+#def testldap:
+#	ldap = DenhacLdapLibrary()
+#	ldap.ldapBind(username, password)
